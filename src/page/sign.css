@@ -1,0 +1,369 @@
+/* --- 🎛️ CORE RESET & BASE STYLES --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #0f172a; /* Fallback deep background color */
+}
+
+/* --- 🖼️ LAYOUT CONTAINERS --- */
+.login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.login-card {
+  width: 380px;
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.65); /* Darker backdrop base to ensure white text pops */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* --- 🏷️ TYPOGRAPHY & BRANDING --- */
+.logo {
+  width: 250px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.logo-box h1 {
+  margin-top: 10px;
+  color: #1fc8ff;
+}
+
+h2 {
+  margin-top: 20px;
+  color: #ffffff;
+}
+
+p {
+  margin: 10px 0;
+}
+
+.login-subtitle,
+.membership-subtitle {
+  color: #cbd5e1;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.signup-redirect-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.signup-redirect-text a {
+  color: #00c6ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup-redirect-text a:hover {
+  text-decoration: underline;
+}
+
+/* --- 📝 FORM & INPUT FIELDS (TEXT FIXES APPLIED) --- */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- 📝 FORM & INPUT FIELDS (SCOPED ACCURATELY) --- */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 🎯 Scoped to only force white text INSIDE the dark login / register views */
+.login-card .form-input,
+.login-card input[type="text"],
+.login-card input[type="email"],
+.login-card input[type="password"],
+.login-card input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08) !important; /* semi-opaque background layer */
+  border-radius: 10px;
+  color: #ffffff !important; /* Perfectly white text - isolated to login card */
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+/* Fixes placeholder color inside login card */
+.login-card .form-input::placeholder,
+.login-card input::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.login-card .form-input:focus,
+.login-card input:focus {
+  outline: none;
+  border-color: #00c6ff;
+  background: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 0 8px rgba(0, 198, 255, 0.3);
+}
+
+
+
+/* 🎯 CRITICAL FIX: Destroys browser autofill overriding text color to black */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 0px 9999px rgba(15, 23, 42, 0.9) !important;
+}
+
+/* --- 🔒 PASSWORD CONTAINER UTILITIES --- */
+.password-input-wrapper {
+  display: flex;
+  position: relative;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.password-input-wrapper input,
+.password-input-wrapper .password-field-input {
+  margin: 10px 0 0 0 !important; /* Align wrapper accurately */
+  padding-right: 65px; 
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 15px;
+  top: 55%;
+  transform: translateY(-50%);
+  background: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #00c6ff;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  width: auto;
+  z-index: 10;
+}
+
+.password-toggle-btn:hover {
+  color: #0072ff;
+}
+
+/* --- ⚡ INTERACTIVE BUTTONS --- */
+button,
+.login-submit-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+button:hover,
+.login-submit-btn:hover {
+  opacity: 0.95;
+  transform: translateY(-1px);
+}
+
+button:disabled,
+.login-submit-btn:disabled {
+  background: #475569 !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+/* --- 🔔 FLOATING TOAST POPUPS --- */
+.toast-notification {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: #ffffff;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  z-index: 9999;
+  min-width: 320px;
+  max-width: 450px;
+  animation: slideInFromRight 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-notification.success { border-left: 6px solid #2ecc71; }
+.toast-notification.error { border-left: 6px solid #e74c3c; }
+.toast-notification.info { border-left: 6px solid #3498db; }
+
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toast-icon {
+  font-size: 20px;
+}
+
+.toast-text {
+  margin: 0;
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: left;
+  line-height: 1.4;
+}
+
+.toast-close-btn {
+  background: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 22px;
+  color: #94a3b8;
+  cursor: pointer;
+  width: auto;
+  line-height: 1;
+}
+/* --- ⚡ INTERACTIVE DISABLED BUTTON & SPINNER --- */
+button:disabled,
+.login-submit-btn:disabled {
+  background: #334155 !important; /* Changes button to a dark grey background color */
+  color: #94a3b8 !important;     /* Dulls down text color */
+  cursor: not-allowed !important; /* Shows a locked circle cursor icon */
+  transform: none !important;
+  opacity: 0.8;
+}
+
+.button-loader-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* 🔄 Creating a pure CSS spinning loading circle */
+.spinner-circle {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: buttonRingSpin 0.75s linear infinite;
+}
+
+@keyframes buttonRingSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.toast-close-btn:hover {
+  color: #475569;
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* --- 📱 RESPONSIVE MEDIA QUERIES --- */
+
+/* Targets small devices, mobile frames, and mini screens */
+@media screen and (max-width: 480px) {
+  .login-container {
+    padding: 16px;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 100%;
+    padding: 24px 16px;
+    border-radius: 16px;
+  }
+
+  .logo {
+    width: 200px;
+  }
+
+  h2 {
+    font-size: 20px;
+    margin-top: 15px;
+  }
+
+  .form-input,
+  input {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  button,
+  .login-submit-btn {
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  /* Moves popup securely to mobile baseline grid viewports */
+  .toast-notification {
+    top: auto;
+    bottom: 20px;
+    right: 16px;
+    left: 16px;
+    min-width: 0;
+    max-width: none;
+    padding: 14px 16px;
+    border-radius: 8px;
+    animation: slideUpFromBottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .toast-text {
+    font-size: 13px;
+  }
+}
+
+@keyframes slideUpFromBottom {
+  0% {
+    transform: translateY(120%) scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}

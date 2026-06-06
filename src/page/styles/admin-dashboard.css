@@ -1,0 +1,150 @@
+/* --- 🎛️ CORE LAYOUT FRAMEWORK --- */
+.admin-wrapper.row-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  width: 100%;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.admin-horizontal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1a252f;
+  padding: 14px 24px;
+  color: #fff;
+  border-bottom: 3px solid #e74c3c;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.admin-brand-block { display: flex; flex-direction: column; }
+.admin-brand { margin: 0; font-size: 20px; font-weight: 700; color: #3498db; letter-spacing: 0.5px; }
+.admin-badge { color: #e74c3c; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 11px; margin-top: 2px; }
+.admin-horizontal-nav { display: flex; align-items: center; gap: 8px; }
+
+.admin-row-btn {
+  padding: 10px 16px;
+  color: #cbd5e1;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.admin-row-btn:hover { background-color: #2c3e50; color: #fff; }
+.admin-row-btn.active { background-color: #e74c3c; color: #fff; }
+.admin-row-logout { background-color: #c0392b; color: #fff; font-weight: 700; }
+.admin-row-logout:hover { background-color: #a93226; }
+
+.admin-row-main-area { flex: 1; width: 100%; padding: 35px; overflow-y: auto; }
+.btn-badge-inline { display: inline-flex; align-items: center; }
+
+/* --- 🎯 CRITICAL INPUT OVERRIDES --- */
+.admin-row-main-area :is(input, textarea, select) {
+  background-color: #fff !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  width: 100% !important;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05) !important;
+  display: block;
+}
+.admin-row-main-area :is(input, textarea, select):focus {
+  outline: none !important;
+  border-color: #3498db !important;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.25) !important;
+}
+
+/* --- 💳 METRICS & TABLES --- */
+.admin-table-card { background: #fff; border-radius: 10px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow: hidden; margin-top: 20px; }
+.table-responsive-wrapper { width: 100%; overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+.admin-table th { background-color: #f8fafc; color: #64748b; padding: 16px; font-weight: 700; border-bottom: 2px solid #e2e8f0; text-transform: uppercase; font-size: 11px; letter-spacing: 0.75px; }
+.admin-table td { padding: 16px; border-bottom: 1px solid #edf2f7; vertical-align: middle; color: #334155; }
+.admin-table tr:hover { background-color: #f8fafc; }
+
+.repay-alert-badge {
+  background-color: #e74c3c;
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: 5px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  animation: pulseRepayBadge 2s infinite ease-in-out;
+}
+.repay-alert-badge.loan-badge-color { background-color: #2980b9; }
+@keyframes pulseRepayBadge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+.purpose-context-box, .proof-context-box { background: #f1f5f9; padding: 10px 14px; border-radius: 6px; font-size: 13px; color: #334155; max-width: 300px; word-break: break-all; border-left: 3px solid #94a3b8; }
+.action-button-group { display: flex; gap: 8px; }
+.action-button-group button { color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; }
+.btn-action-disburse { background-color: #2980b9; }
+.btn-action-clear-debt { background-color: #2ecc71; }
+.btn-action-decline, .btn-action-reject { background-color: #e74c3c; }
+.action-button-group button:hover { opacity: 0.9; }
+.empty-table-notice { text-align: center; padding: 50px !important; color: #64748b; font-weight: 500; }
+
+/* --- 🔔 TOAST NOTIFICATIONS --- */
+.toast-notification {
+  position: fixed !important; top: 24px !important; right: 24px !important; background: #fff !important;
+  padding: 16px 20px !important; border-radius: 12px !important; box-shadow: 0 20px 40px rgba(0,0,0,0.25) !important;
+  display: flex !important; align-items: center !important; justify-content: space-between !important; gap: 15px !important;
+  z-index: 99999 !important; min-width: 320px; max-width: 450px; animation: slideInFromRight 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+.toast-notification.success { border-left: 6px solid #2ecc71 !important; }
+.toast-notification.error { border-left: 6px solid #e74c3c !important; }
+.toast-notification.info { border-left: 6px solid #3498db !important; }
+.toast-content { display: flex !important; align-items: center !important; gap: 12px !important; }
+.toast-icon { font-size: 20px; }
+.toast-text { margin: 0 !important; color: #1e293b !important; font-weight: 600 !important; font-size: 14px !important; text-align: left !important; line-height: 1.4 !important; }
+.toast-close-btn { background: none !important; border: none !important; color: #94a3b8 !important; font-size: 22px !important; cursor: pointer !important; }
+@keyframes slideInFromRight { 0% { transform: translateX(120%) scale(0.9); opacity: 0; } 100% { transform: translateX(0) scale(1); opacity: 1; } }
+
+/* --- 🏛️ MODAL POPUP WINDOWS --- */
+.admin-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15,23,42,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 999999; padding: 20px; animation: modalFadeIn 0.2s ease-out; }
+.admin-modal-card { background: #fff; width: 100%; max-width: 480px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden; animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.modal-header-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: #1a252f; color: #fff; }
+.modal-header-row h4 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+.close-modal-x { background: none; border: none; color: #94a3b8; font-size: 26px; cursor: pointer; }
+.close-modal-x:hover { color: #fff; }
+.modal-form-stack { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.modal-input-group { display: flex; flex-direction: column; gap: 6px; }
+.modal-input-group label { font-size: 13px; font-weight: 700; color: #475569; }
+.modal-action-buttons { display: flex; justify-content: flex-end; gap: 12px; margin-top: 10px; }
+.modal-action-buttons button { padding: 10px 18px; font-size: 14px; font-weight: 600; border-radius: 6px; cursor: pointer; border: none; }
+.modal-btn-cancel { background: #e2e8f0; color: #475569; }
+.modal-btn-cancel:hover { background: #cbd5e1; }
+.modal-btn-confirm { background: #2980b9; color: #fff; }
+.modal-btn-confirm:hover { background: #2471a3; }
+.modal-btn-confirm:disabled { background: #94a3b8; cursor: not-allowed; }
+@keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalSlideUp { from { transform: translateY(30px) scale(0.98); } to { transform: translateY(0) scale(1); } }
+
+/* --- 📱 MOBILE RESPONSIVENESS MATRIX --- */
+@media screen and (max-width: 900px) {
+  .admin-horizontal-header { flex-direction: column; gap: 14px; padding: 14px 16px; align-items: flex-start; }
+  .admin-horizontal-nav { width: 100%; overflow-x: auto; white-space: nowrap; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+  .admin-horizontal-nav::-webkit-scrollbar { height: 4px; }
+  .admin-horizontal-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+  .admin-row-btn { padding: 8px 14px; font-size: 13px; display: inline-flex; }
+  .admin-row-logout { align-self: flex-end; margin-top: -42px; padding: 6px 12px; }
+  .admin-row-main-area { padding: 20px 12px; }
+  .toast-notification { top: auto !important; bottom: 20px !important; right: 16px !important; left: 16px !important; min-width: 0 !important; max-width: none !important; padding: 14px 16px !important; border-radius: 8px !important; animation: slideUpFromBottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; }
+  .toast-text { font-size: 13px; }
+}
+@keyframes slideUpFromBottom { 0% { transform: translateY(120%) scale(0.95); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }

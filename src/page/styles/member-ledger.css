@@ -1,0 +1,172 @@
+.ledger-container h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.ledger-subtitle {
+  color: #7f8c8d;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+.table-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+/* 📱 Responsive horizontal-scrolling table barrier engine */
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Forces fluid momentum swipe response on modern mobile browsers */
+}
+
+.empty-ledger-text {
+  padding: 30px;
+  color: #7f8c8d;
+  text-align: center;
+}
+
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.ledger-table th {
+  background: #eaeded;
+  color: #34495e;
+  padding: 15px;
+  font-weight: 600;
+  white-space: nowrap; /* Forces key desktop headers to sit flat safely */
+}
+
+.ledger-table td {
+  padding: 15px;
+  border-bottom: 1px solid #f2f4f4;
+  white-space: nowrap; /* Guarantees financial currencies don't experience vertical splitting text disruptions */
+}
+
+.date-cell {
+  color: #7f8c8d;
+}
+
+.desc-cell {
+  font-weight: 500;
+  color: #2c3e50;
+  white-space: normal !important; /* Overrides global constraints so long descriptions can safely break over lines */
+  min-width: 220px; /* Locks open spatial grid footprint parameters */
+}
+
+.amount-cell {
+  font-weight: bold;
+}
+
+.amount-cell.positive {
+  color: #27ae60;
+}
+
+.amount-cell.negative {
+  color: #c0392b;
+}
+
+.final-balance-cell {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Color indicators for money transactions */
+.amount-cell.positive {
+  color: #2ecc71 !important;
+  font-weight: bold;
+}
+
+.amount-cell.negative {
+  color: #e74c3c !important;
+  font-weight: bold;
+}
+
+/* Enhances alignment across systems */
+.ledger-table th {
+  text-align: left;
+  padding: 14px;
+  font-size: 13px;
+  background-color: #f8fafc;
+  color: #475569;
+}
+
+.ledger-table td {
+  padding: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+/* Unified Bank App Badge Matrix styling rules */
+.bank-event-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 4px;
+  text-align: center;
+  letter-spacing: 0.3px;
+}
+
+.badge-deposit {
+  background-color: #e8f8f5;
+  color: #1abc9c;
+}
+
+.badge-withdraw {
+  background-color: #fce4d6;
+  color: #d35400;
+}
+
+.badge-loan-in {
+  background-color: #ebf5fb;
+  color: #2980b9;
+}
+
+.badge-loan-out {
+  background-color: #f5eef8;
+  color: #8e44ad;
+}
+
+.badge-bonus {
+  background-color: #feefc3;
+  color: #b06000;
+}
+
+.badge-generic {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* ==========================================================================
+   📱 MOBILE & TABLET DATA COMPRESSION QUERY BREAKPOINT
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  .ledger-container h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .ledger-subtitle {
+    font-size: 13px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+  }
+
+  /* Compress padding constraints to leverage view area space metrics */
+  .ledger-table th, 
+  .ledger-table td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  .date-cell {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,112 @@
+.ledger-container h2 {
+  color: #2c3e50;
+  margin-top: 0;
+}
+
+.subtitle {
+  color: #7f8c8d;
+  margin-bottom: 25px;
+  font-size: 15px;
+}
+
+.table-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+/* 📱 Responsive scrolling container wrapper shield */
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* Smooth elastic swipe actions on iOS web browsers */
+}
+
+.global-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.global-table th {
+  background: #ebf5fb;
+  color: #2c3e50;
+  padding: 15px;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap; /* Forces desktop headers to stand flat */
+}
+
+.global-table td {
+  padding: 15px;
+  border-bottom: 1px solid #eaeded;
+  white-space: nowrap; /* Keeps financial cells properly stacked */
+}
+
+.time-cell {
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.user-ref-cell {
+  font-weight: 500;
+  color: #7f8c8d;
+}
+
+.desc-cell {
+  white-space: normal !important; /* Allows description rows to cleanly break text strings over lines */
+  min-width: 240px; /* Secures enough room for text summaries */
+  color: #2c3e50;
+}
+
+.pos {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.neg {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.final-val {
+  font-weight: 600;
+  color: #34495e;
+}
+
+.empty-ledger-text {
+  text-align: center;
+  color: #95a5a6;
+  font-style: italic;
+  padding: 30px !important;
+}
+
+/* ==========================================================================
+   📱 MOBILE MEDIA QUERIES FOR SMALL DISPLAYS
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  .ledger-container {
+    padding: 10px 5px;
+  }
+
+  .ledger-container h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    margin-bottom: 15px;
+    line-height: 1.4;
+  }
+
+  /* Compress overall table cell space density */
+  .global-table th, .global-table td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  .time-cell {
+    font-size: 12px;
+  }
+}

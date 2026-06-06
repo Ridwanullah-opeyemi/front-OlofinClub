@@ -1,0 +1,222 @@
+.deposit-container h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.deposit-subtitle {
+  color: #7f8c8d;
+  margin-bottom: 30px;
+}
+
+/* Base Desktop Grid configuration */
+.deposit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: start; /* Keeps items from unnaturally stretching vertically if heights mismatch */
+}
+
+.instructions-card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.instructions-card h3 {
+  color: #2c3e50;
+  margin-top: 0;
+}
+
+/* Form Layout System */
+.deposit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-label {
+  color: #34495e;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Input Fields visibility settings */
+.form-input {
+  width: 100%;
+  height: 44px; /* Increased slightly for a better mobile fingertip target */
+  padding: 10px 12px;
+  font-size: 16px; /* Blocks iOS mobile auto-zooming behaviors on focuses */
+  color: #2c3e50;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.form-file-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  color: #2c3e50;
+  background: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Previews container styling */
+.preview-box {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.preview-label {
+  margin: 0 0 5px 0;
+  font-size: 13px;
+  color: #7f8c8d;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 220px;
+  border-radius: 6px;
+  border: 2px dashed #3498db;
+  padding: 4px;
+  object-fit: contain; /* Ensures receipt captures display without layout squeezing distorting proportions */
+}
+
+/* Actions handling mechanics button configuration */
+.submit-request-btn {
+  background-color: #3498db;
+  color: white;
+  padding: 14px; /* Enhanced tracking spacing */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.submit-request-btn:hover {
+  background-color: #2980b9;
+}
+
+.submit-request-btn:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* Alert Notification Status Boxes */
+.alert-box {
+  padding: 12px 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.alert-box.success {
+  background-color: #e8f8f5;
+  color: #27ae60;
+  border: 1px solid #a3e4d7;
+}
+
+.alert-box.error {
+  background-color: #fce4d6;
+  color: #c0392b;
+  border: 1px solid #f5b7b1;
+}
+
+/* Bank Parameters Informational Board Panels */
+.info-notice-card {
+  background: #ebf5fb;
+  padding: 30px;
+  border-radius: 8px;
+  border: 1px solid #a9dfbf;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.notice-title {
+  margin: 0 0 10px 0;
+  color: #2980b9;
+  font-size: 16px;
+}
+
+.notice-body {
+  margin: 0;
+  color: #34495e;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.bank-details-wrapper {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 6px;
+  margin-top: 15px;
+  border: 1px solid #cbd5e1;
+}
+
+.bank-details-wrapper p {
+  margin: 6px 0;
+  color: #34495e;
+  font-size: 14px;
+}
+
+
+/* ==========================================================================
+   📱 RESPONSIVE BREAKPOINT (TABLETS & SMARTPHONES)
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  .deposit-container {
+    padding: 5px 0;
+  }
+
+  .deposit-container h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .deposit-subtitle {
+    font-size: 13px;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+
+  /* 🔄 COLLAPSE GRID SIDEBAR SYSTEM TO TRACK VERTICALLY */
+  .deposit-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Optimize internal spacing metrics on smaller card screens */
+  .instructions-card, .info-notice-card {
+    padding: 20px 15px;
+  }
+
+  /* Push the Bank info details block to stack up cleanly on top of the payment form on mobile */
+  .info-notice-card {
+    order: -1; 
+  }
+
+  .notice-body {
+    font-size: 13px;
+  }
+}

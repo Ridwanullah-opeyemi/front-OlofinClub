@@ -1,0 +1,133 @@
+.repayments-view-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.repayments-header h2 {
+  margin: 0 0 5px 0;
+  color: #2c3e50;
+  font-size: 24px;
+}
+
+.repayments-header p {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.repayments-card-container {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.repayments-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.repayments-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.repayments-data-table th {
+  background-color: #f8fafc;
+  color: #64748b;
+  padding: 16px;
+  font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.repayments-data-table td {
+  padding: 16px;
+  border-bottom: 1px solid #edf2f7;
+  vertical-align: middle;
+}
+
+.user-info-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info-cell small {
+  color: #94a3b8;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.repay-amount-display {
+  font-weight: bold;
+  color: #2ecc71;
+  font-size: 15px;
+}
+
+.repay-proof-block {
+  background: #f1f5f9;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #334155;
+  max-width: 320px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  border-left: 3px solid #cbd5e1;
+}
+
+.repay-action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.repay-action-buttons button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-repay-approve {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.btn-repay-approve:hover {
+  background-color: #27ae60;
+}
+
+.btn-repay-decline {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-repay-decline:hover {
+  background-color: #c0392b;
+}
+
+.empty-repayments-notice {
+  text-align: center;
+  padding: 40px !important;
+  color: #64748b;
+  font-weight: 500;
+  background: #fafafa;
+}
+
+.repayments-loading {
+  padding: 50px;
+  text-align: center;
+  color: #7f8c8d;
+  font-weight: 500;
+}

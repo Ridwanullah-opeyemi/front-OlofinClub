@@ -1,0 +1,243 @@
+/* ==========================================================================
+   🌐 DESKTOP CORE FIXED NAVBAR STYLING
+   ========================================================================== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  z-index: 1000;
+  background: rgba(2, 17, 31, 0.95);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* BRAND LOGO CONTEXT MAPS */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.nav-logo img {
+  width: 150px; /* Normalized clean dimensions */
+  height: auto;
+  border-radius: 50%;
+  object-fit: contain;
+}
+
+.logo-text h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.logo-text h2::first-letter {
+  color: #22d3ee;
+}
+
+.logo-text span {
+  font-size: 13px;
+  color: #cfd8dc;
+  letter-spacing: 1px;
+}
+
+/* UNIFIED CONTAINER STRUCTURAL FLOW */
+.nav-menu-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+  margin-left: 50px;
+}
+
+/* LINK ELEMENT TARGET BUTTONS */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+}
+
+.nav-links button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 0;
+  position: relative;
+  transition: 0.3s ease;
+}
+
+.nav-links button:hover {
+  color: #22d3ee;
+}
+
+.nav-links button::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  height: 2px;
+  background: #22d3ee;
+  transition: 0.3s;
+}
+
+.nav-links button:hover::after {
+  width: 100%;
+}
+
+/* ACTION CONTROLS BUTTON MATRIX */
+.nav-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.signup-btn,
+.login-btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.signup-btn {
+  background: transparent;
+  border: 1px solid #22d3ee;
+  color: #22d3ee;
+}
+
+.signup-btn:hover {
+  background: #22d3ee;
+  color: black;
+}
+
+.login-btn {
+  background: linear-gradient(135deg, #06b6d4, #2563eb);
+  color: white;
+}
+
+.login-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+}
+
+/* ==========================================================================
+   🍔 RESPONSIVE HAMBURGER ELEMENT MARKERS
+   ========================================================================== */
+.hamburger-toggle-menu {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 21px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.hamburger-toggle-menu .bar {
+  width: 100%;
+  height: 3px;
+  background-color: white;
+  border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Animated Transforms when Mobile Open Drawer Flag Active */
+.hamburger-toggle-menu.active .bar:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+  background-color: #22d3ee;
+}
+
+.hamburger-toggle-menu.active .bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-toggle-menu.active .bar:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+  background-color: #22d3ee;
+}
+
+/* ==========================================================================
+   📱 MEDIA QUERIES BREAKPOINTS (TABLETS & PHONE DRAWER MODE)
+   ========================================================================== */
+@media screen and (max-width: 915px) {
+  
+.nav-logo img {
+  width: 120px; 
+}
+  .navbar {
+    padding: 0 25px;
+  }
+
+  .hamburger-toggle-menu {
+    display: flex; /* Show menu toggle button lines */
+  }
+
+  /* Converts wrapper block layout into dynamic slide out absolute side drawer panel */
+  .nav-menu-wrapper {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Hidden completely off-screen by default default */
+    width: 280px;
+    height: 100vh;
+    background: rgba(3, 24, 43, 0.98);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 120px 30px 40px 30px;
+    gap: 50px;
+    margin-left: 0;
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .nav-menu-wrapper.open {
+    right: 0; /* Slide-in overlay on layout tree trigger activation */
+  }
+
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    gap: 25px;
+  }
+
+  .nav-links button {
+    font-size: 18px;
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+  }
+
+  .nav-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+  }
+
+  .signup-btn,
+  .login-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    text-align: center;
+  }
+}
