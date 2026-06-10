@@ -1,82 +1,60 @@
 import React from "react";
-import { useAdminData } from "./hooks/adminOverViewHook"; 
-import "../styles/admin-overview.css"; 
-import AdminCreateUser from "./AdminCreateUser"; 
+import { useAdminData } from "./hooks/adminOverViewHook";
+import "../styles/admin-overview.css";
+import AdminCreateUser from "./AdminCreateUser";
 
-function AdminOverview() {
+function AdminOverview({ triggerPopup, notify, confirm, prompt }) {
   const {
     users, requests, loanRequests, selectedUser, setSelectedUser,
     isModalOpen, setIsModalOpen,
     amount, setAmount, actionType, setActionType, loading, viewTab, setViewTab, isMainAdmin,
     fetchData, handleBalanceAdjustment, handleResolveLoan,
-    handleDeleteUser, handleResolveRequest, handleRoleChange, 
-    
-    // 🎯 Destructuring the new cooperative finance properties here
-    totalPoolLiquidity,
-    totalActiveLoansIssued,
-    availableClubCash
-  } = useAdminData();
+    handleDeleteUser, handleResolveRequest, handleRoleChange,
+    totalPoolLiquidity, totalActiveLoansIssued, availableClubCash,
+  } = useAdminData({ notify, confirm, prompt, triggerPopup });
 
   return (
     <div className="overview-container">
       <h2>Olofin Heritage Club Management Station</h2>
-      
+
       {/* Metrics Header Cards */}
       <div className="metrics-cards-container" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "15px", marginBottom: "25px" }}>
-        
-        {/* Card 1: Gross Platform Contributions Accumulation */}
         <div className="metric-card balance-card">
           <small className="metric-label">Total Contribution Capital</small>
           <h2 className="metric-value" style={{ color: "#2ecc71" }}>₦{totalPoolLiquidity.toLocaleString()}</h2>
         </div>
-
-        {/* Card 2: Active Outstanding Debt Portfolio */}
         <div className="metric-card loan-pool-card" style={{ background: "#fff", padding: "20px", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.05)", borderLeft: "5px solid #e67e22" }}>
           <small className="metric-label" style={{ color: "#7f8c8d", fontWeight: "600" }}>Total Out on Loan</small>
           <h2 className="metric-value" style={{ color: "#e67e22", fontSize: "24px", marginTop: "5px" }}>₦{totalActiveLoansIssued.toLocaleString()}</h2>
         </div>
-
-        {/* Card 3: Safe Liquid Cash Available in Vault */}
         <div className="metric-card liquid-vault-card" style={{ background: "#fff", padding: "20px", borderRadius: "12px", boxShadow: "0 4px 12px rgba(0,0,0,0.05)", borderLeft: "5px solid #3498db" }}>
           <small className="metric-label" style={{ color: "#7f8c8d", fontWeight: "600" }}>Available Vault Cash (Liquid)</small>
           <h2 className="metric-value" style={{ color: "#3498db", fontSize: "24px", marginTop: "5px" }}>₦{availableClubCash.toLocaleString()}</h2>
         </div>
-
-        {/* Card 4: Total Members registered inside directory */}
         <div className="metric-card contributors-card">
           <small className="metric-label">Registered Contributors</small>
           <h2 className="metric-value">{users.length} Users Active</h2>
         </div>
-
       </div>
 
       {/* Tab Selectors */}
       <div className="tab-buttons-container">
-        <button 
-          onClick={() => setViewTab("users")} 
-          className={`tab-btn btn-users ${viewTab === "users" ? "active" : ""}`}
-        >
+        <button onClick={() => setViewTab("users")} className={`tab-btn btn-users ${viewTab === "users" ? "active" : ""}`}>
           👥 Active Users Directory ({users.length})
         </button>
-        <button 
-          onClick={() => setViewTab("requests")} 
-          className={`tab-btn btn-requests ${viewTab === "requests" ? "active" : ""}`}
-        >
+        <button onClick={() => setViewTab("requests")} className={`tab-btn btn-requests ${viewTab === "requests" ? "active" : ""}`}>
           📩 Membership Registry ({requests.length})
         </button>
-        <button 
-          onClick={() => setViewTab("loans")} 
-          className={`tab-btn btn-loans ${viewTab === "loans" ? "active" : ""}`}
-        >
+        <button onClick={() => setViewTab("loans")} className={`tab-btn btn-loans ${viewTab === "loans" ? "active" : ""}`}>
           💸 Loan Applications Queue ({loanRequests.length})
         </button>
       </div>
 
-      {/* Primary Table Layout Workspace */}
+      {/* Primary Table Layout */}
       <div className="admin-grid">
         <div className="table-card">
           <div className="table-responsive-wrapper">
-            
+
             {viewTab === "users" && (
               <table className="admin-table">
                 <thead>
@@ -95,11 +73,7 @@ function AdminOverview() {
                       <td className="user-email-cell">{u.email}</td>
                       <td>
                         {isMainAdmin && !u.is_primary_founder ? (
-                          <select 
-                            value={u.role_tier || "member"} 
-                            onChange={(e) => handleRoleChange(u.id, e.target.value)} 
-                            className="role-selector-dropdown"
-                          >
+                          <select value={u.role_tier || "member"} onChange={(e) => handleRoleChange(u.id, e.target.value)} className="role-selector-dropdown">
                             <option value="member">Member</option>
                             <option value="senator">Senator</option>
                             <option value="chief">Chief</option>
@@ -117,13 +91,7 @@ function AdminOverview() {
                       </td>
                       <td>
                         <div className="row-actions-wrapper">
-                          <button 
-                            onClick={() => {
-                              setSelectedUser(u);
-                              setIsModalOpen(true);
-                            }} 
-                            className="action-select-btn"
-                          >
+                          <button onClick={() => { setSelectedUser(u); setIsModalOpen(true); }} className="action-select-btn">
                             Modify
                           </button>
                           {!u.is_primary_founder && (
@@ -205,67 +173,48 @@ function AdminOverview() {
           </div>
         </div>
 
-        {/* Sidebar Space for Create User Module */}
+        {/* Sidebar: Create User Module */}
         <div className="admin-sidebar-forms-stack">
-          <AdminCreateUser onUserCreated={fetchData} />
+          <AdminCreateUser onUserCreated={fetchData} triggerPopup={triggerPopup} />
         </div>
       </div>
 
-     {/* Floating Popup Modal Form */}
-{isModalOpen && selectedUser && (
-  <div className="custom-popup-overlay">
-    <div className="custom-popup-box">
-      <h3>Modify Balance / Accounts for {selectedUser.username}</h3>
-      <p style={{ fontSize: "13px", color: "#e67e22", margin: "-5px 0 15px 0" }}>
-        Current Debt Owed: ₦{(selectedUser.loan_balance || 0).toLocaleString()}
-      </p>
+      {/* Balance Adjustment Modal */}
+      {isModalOpen && selectedUser && (
+        <div className="custom-popup-overlay">
+          <div className="custom-popup-box">
+            <h3>Modify Balance / Accounts for {selectedUser.username}</h3>
+            <p style={{ fontSize: "13px", color: "#e67e22", margin: "-5px 0 15px 0" }}>
+              Current Debt Owed: ₦{(selectedUser.loan_balance || 0).toLocaleString()}
+            </p>
 
-      <form onSubmit={handleBalanceAdjustment} className="adjustment-form">
-        <div className="form-group">
-          <label className="form-label">Action Type Alignment</label>
-          <select 
-            value={actionType} 
-            onChange={(e) => setActionType(e.target.value)} 
-            className="form-select"
-          >
-            <option value="credit">➕ Credit Savings Balance</option>
-            <option value="debit">➖ Debit Savings Balance</option>
-            {/* 🎯 NEW REPAYMENT ALTERNATIVE OPTION */}
-            <option value="pay_loan">💳 Direct Loan Repayment (Reduce Debt)</option>
-          </select>
-        </div>
+            <form onSubmit={handleBalanceAdjustment} className="adjustment-form">
+              <div className="form-group">
+                <label className="form-label">Action Type Alignment</label>
+                <select value={actionType} onChange={(e) => setActionType(e.target.value)} className="form-select">
+                  <option value="credit">➕ Credit Savings Balance</option>
+                  <option value="debit">➖ Debit Savings Balance</option>
+                  <option value="pay_loan">💳 Direct Loan Repayment (Reduce Debt)</option>
+                </select>
+              </div>
 
-        <div className="form-group">
-          <label className="form-label">Amount Target Variant (₦)</label>
-          <input 
-            type="number" 
-            value={amount} 
-            onChange={(e) => setAmount(e.target.value)} 
-            className="form-input" 
-            placeholder="e.g. 20000" 
-            required 
-          />
-        </div>
+              <div className="form-group">
+                <label className="form-label">Amount Target Variant (₦)</label>
+                <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} className="form-input" placeholder="e.g. 20000" required />
+              </div>
 
-        <div className="form-actions">
-          <button type="submit" disabled={loading} className="confirm-btn">
-            {loading ? "Processing..." : "Execute Adjustment"}
-          </button>
-          <button 
-            type="button" 
-            onClick={() => {
-              setSelectedUser(null);
-              setIsModalOpen(false);
-            }} 
-            className="cancel-sidebar-btn"
-          >
-            Cancel
-          </button>
+              <div className="form-actions">
+                <button type="submit" disabled={loading} className="confirm-btn">
+                  {loading ? "Processing..." : "Execute Adjustment"}
+                </button>
+                <button type="button" onClick={() => { setSelectedUser(null); setIsModalOpen(false); }} className="cancel-sidebar-btn">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
-    </div>
-  </div>
-)}
+      )}
     </div>
   );
 }

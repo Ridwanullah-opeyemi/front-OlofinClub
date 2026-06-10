@@ -3,54 +3,48 @@ import { useNavigate } from "react-router-dom";
 import AdminOverview from "./admin/AdminOverview";
 import AdminTransactions from "./admin/AdminTransactions";
 import AdminApprovals from "./admin/AdminApprovals";
-import AdminChat from "./admin/AdminChat"; 
-import AdminRepayments from "./admin/AdminRepayments"; 
-import AdminLoanRequests from "./admin/AdminLoanRequests"; 
-import "./styles/admin-dashboard.css"; 
+import AdminChat from "./admin/AdminChat";
+import AdminRepayments from "./admin/AdminRepayments";
+import AdminLoanRequests from "./admin/AdminLoanRequests";
+import DialogRenderer from "../component/DialogRenderer";
+import { useDialog } from "./hooks/useDialog";
+import "./styles/admin-dashboard.css";
 
 function AdminDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [loggingOut, setLoggingOut] = useState(false);
-  
-  const [pendingRepayCount, setPendingRepayCount] = useState(0); 
-  const [pendingLoanCount, setPendingLoanCount] = useState(0); 
+
+  const [pendingRepayCount, setPendingRepayCount] = useState(0);
+  const [pendingLoanCount, setPendingLoanCount] = useState(0);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  // UI Popup Modal Notification State Machine
-  const [popup, setPopup] = useState({
-    show: false,
-    message: "",
-    type: "", // "success", "error", or "info"
-  });
+  // ── Toast popup (unchanged) ──────────────────────────────────────────
+  const [popup, setPopup] = useState({ show: false, message: "", type: "" });
 
-  const token = localStorage.getItem("token");
-
-  // Helper utility to trigger smooth, floating UI toasts
   const triggerPopup = (message, type = "success") => {
     setPopup({ show: true, message, type });
-    
-    // Auto-dismiss after 4 seconds
-    setTimeout(() => {
-      setPopup({ show: false, message: "", type: "" });
-    }, 4000);
+    setTimeout(() => setPopup({ show: false, message: "", type: "" }), 4000);
   };
+
+  // ── Dialog system (replaces alert / confirm / prompt) ────────────────
+  const { dialog, notify, confirm, prompt, handleConfirm, handleCancel } = useDialog();
+
+  const token = localStorage.getItem("token");
 
   const fetchBankingBadgeCounts = async () => {
     if (!token) return;
     try {
-      // 1. Repayments Pipe
       const repayResponse = await fetch(`${backendUrl}/api/auth/loans/repayments/pending`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       const repayData = await repayResponse.json();
       if (repayResponse.ok && repayData.success) {
         setPendingRepayCount(Array.isArray(repayData.data) ? repayData.data.length : 0);
       }
 
-      // 2. Pending Loans Table
-      const loanResponse = await fetch(`${backendUrl}/api/auth/loans/pending`, { 
-        headers: { Authorization: `Bearer ${token}` }
+      const loanResponse = await fetch(`${backendUrl}/api/auth/loans/pending`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
       const loanData = await loanResponse.json();
       if (loanResponse.ok && loanData.success) {
@@ -70,11 +64,10 @@ function AdminDashboard() {
   const handleLogout = async () => {
     setLoggingOut(true);
     triggerPopup("Securely terminating administrative workspace credentials...", "info");
-    
     try {
       await fetch(`${backendUrl}/api/auth/logout`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       });
     } catch (err) {
       console.error("Logout error channel disruption:", err);
@@ -89,26 +82,29 @@ function AdminDashboard() {
   const renderContent = () => {
     switch (activeTab) {
       case "overview":
-        return <AdminOverview triggerPopup={triggerPopup} />;
+        return <AdminOverview triggerPopup={triggerPopup} notify={notify} confirm={confirm} prompt={prompt} />;
       case "approvals":
         return <AdminApprovals triggerPopup={triggerPopup} />;
-      case "loan-requests": 
-        return <AdminLoanRequests onRefresh={fetchBankingBadgeCounts} triggerPopup={triggerPopup} />;
-      case "repayments": 
-        return <AdminRepayments onRefresh={fetchBankingBadgeCounts} triggerPopup={triggerPopup} />;
+      case "loan-requests":
+        return <AdminLoanRequests onRefresh={fetchBankingBadgeCounts} triggerPopup={triggerPopup} notify={notify} confirm={confirm} />;
+      case "repayments":
+        return <AdminRepayments onRefresh={fetchBankingBadgeCounts} triggerPopup={triggerPopup} notify={notify} confirm={confirm} />;
       case "transactions":
         return <AdminTransactions triggerPopup={triggerPopup} />;
       case "chat":
-        return <AdminChat triggerPopup={triggerPopup} />;
+        return <AdminChat triggerPopup={triggerPopup} notify={notify} />;
       default:
-        return <AdminOverview triggerPopup={triggerPopup} />;
+        return <AdminOverview triggerPopup={triggerPopup} notify={notify} confirm={confirm} prompt={prompt} />;
     }
   };
 
   return (
     <div className="admin-wrapper row-layout">
-      
-      {/* 🔔 FLOATING TOAST POPOUT MESSAGES */}
+
+      {/* Custom dialog modal (confirm / prompt / notify) */}
+      <DialogRenderer dialog={dialog} onConfirm={handleConfirm} onCancel={handleCancel} />
+
+      {/* Floating toast notifications */}
       {popup.show && (
         <div className={`toast-notification ${popup.type}`}>
           <div className="toast-content">
@@ -117,9 +113,9 @@ function AdminDashboard() {
             </span>
             <p className="toast-text">{popup.message}</p>
           </div>
-          <button 
-            type="button" 
-            className="toast-close-btn" 
+          <button
+            type="button"
+            className="toast-close-btn"
             onClick={() => setPopup({ ...popup, show: false })}
           >
             ×
@@ -127,7 +123,7 @@ function AdminDashboard() {
         </div>
       )}
 
-      {/* 🧭 HORIZONTAL NAVIGATION NAVBAR ROW */}
+      {/* Horizontal navigation header */}
       <header className="admin-horizontal-header">
         <div className="admin-brand-block">
           <h2 className="admin-brand">Olofin Heritage</h2>
@@ -135,75 +131,34 @@ function AdminDashboard() {
         </div>
 
         <nav className="admin-horizontal-nav">
-          <button 
-            type="button"
-            onClick={() => setActiveTab("overview")} 
-            className={`admin-row-btn ${activeTab === "overview" ? "active" : ""}`}
-          >
+          <button type="button" onClick={() => setActiveTab("overview")} className={`admin-row-btn ${activeTab === "overview" ? "active" : ""}`}>
             👥 Members
           </button>
-          
-          <button 
-            type="button"
-            onClick={() => setActiveTab("approvals")} 
-            className={`admin-row-btn ${activeTab === "approvals" ? "active" : ""}`}
-          >
+          <button type="button" onClick={() => setActiveTab("approvals")} className={`admin-row-btn ${activeTab === "approvals" ? "active" : ""}`}>
             📥 Deposits
           </button>
-
-          <button 
-            type="button"
-            onClick={() => setActiveTab("loan-requests")} 
-            className={`admin-row-btn ${activeTab === "loan-requests" ? "active" : ""}`}
-          >
+          <button type="button" onClick={() => setActiveTab("loan-requests")} className={`admin-row-btn ${activeTab === "loan-requests" ? "active" : ""}`}>
             <span className="btn-badge-inline">💰 Loans</span>
-            {pendingLoanCount > 0 && (
-              <span className="repay-alert-badge loan-badge-color">{pendingLoanCount}</span>
-            )}
+            {pendingLoanCount > 0 && <span className="repay-alert-badge loan-badge-color">{pendingLoanCount}</span>}
           </button>
-
-          <button 
-            type="button"
-            onClick={() => setActiveTab("repayments")} 
-            className={`admin-row-btn ${activeTab === "repayments" ? "active" : ""}`}
-          >
+          <button type="button" onClick={() => setActiveTab("repayments")} className={`admin-row-btn ${activeTab === "repayments" ? "active" : ""}`}>
             <span className="btn-badge-inline">💳 Repayments</span>
-            {pendingRepayCount > 0 && (
-              <span className="repay-alert-badge">{pendingRepayCount}</span>
-            )}
+            {pendingRepayCount > 0 && <span className="repay-alert-badge">{pendingRepayCount}</span>}
           </button>
-          
-          <button 
-            type="button"
-            onClick={() => setActiveTab("transactions")} 
-            className={`admin-row-btn ${activeTab === "transactions" ? "active" : ""}`}
-          >
+          <button type="button" onClick={() => setActiveTab("transactions")} className={`admin-row-btn ${activeTab === "transactions" ? "active" : ""}`}>
             📊 Ledger
           </button>
-
-          <button 
-            type="button"
-            onClick={() => setActiveTab("chat")} 
-            className={`admin-row-btn ${activeTab === "chat" ? "active" : ""}`}
-          >
+          <button type="button" onClick={() => setActiveTab("chat")} className={`admin-row-btn ${activeTab === "chat" ? "active" : ""}`}>
             💬 Chat
           </button>
-
-          <button 
-            type="button" 
-            onClick={handleLogout} 
-            disabled={loggingOut} 
-            className="admin-row-btn admin-row-logout"
-          >
+          <button type="button" onClick={handleLogout} disabled={loggingOut} className="admin-row-btn admin-row-logout">
             {loggingOut ? "Ending Session..." : "🚪 Secure Logout"}
           </button>
         </nav>
       </header>
 
-      {/* 🖥️ DYNAMIC WORKSPACE COMPONENT CANVAS CONTAINER */}
-      <main className="admin-row-main-area">
-        {renderContent()}
-      </main>
+      {/* Dynamic workspace */}
+      <main className="admin-row-main-area">{renderContent()}</main>
     </div>
   );
 }

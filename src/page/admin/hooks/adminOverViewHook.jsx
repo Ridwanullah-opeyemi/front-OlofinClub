@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
 
-export const useAdminData = () => {
+/**
+ * useAdminData
+ *
+ * Accepts { notify, confirm, prompt, triggerPopup } from the parent component
+ * so all native browser dialogs are replaced with the custom OHC dialog system.
+ */
+export const useAdminData = ({ notify, confirm, prompt, triggerPopup } = {}) => {
   const [users, setUsers] = useState([]);
   const [requests, setRequests] = useState([]);
   const [loanRequests, setLoanRequests] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  
-  // Modal toggle state
-  const [isModalOpen, setIsModalOpen] = useState(false); 
 
-  // Form input states for Balance Adjustment Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [actionType, setActionType] = useState("credit");
   const [loading, setLoading] = useState(false);
@@ -18,29 +21,20 @@ export const useAdminData = () => {
 
   const token = localStorage.getItem("token");
   const currentAdminSession = JSON.parse(localStorage.getItem("user"));
-  const isMainAdmin = currentAdminSession?.role_tier === "main_admin" || currentAdminSession?.is_primary_founder === true;
+  const isMainAdmin =
+    currentAdminSession?.role_tier === "main_admin" ||
+    currentAdminSession?.is_primary_founder === true;
 
-  /* ==========================================================================
-     📈 ADVANCED DYNAMIC COOPERATIVE MATRICES CALCULATORS 
-     ========================================================================== */
-  
-  // 1. General Monthly Contribution Total Accumulation
+  /* ── Cooperative Finance Calculators ─────────────────────────────── */
   const totalPoolLiquidity = users.reduce((sum, u) => sum + (Number(u.amount_paid) || 0), 0);
-
-  // 2. Aggregate Total of all Active Loans Currently Borne by Members
   const totalActiveLoansIssued = users.reduce((sum, u) => sum + (Number(u.loan_balance) || 0), 0);
-
-  // 3. Current Liquid Cash Remaining inside the vault = Contributions - Active Loans
   const availableClubCash = totalPoolLiquidity - totalActiveLoansIssued;
 
-
-  /* ==========================================================================
-     🔄 DATA FETCHING PIPELINES
-     ========================================================================== */
+  /* ── Data Fetching ────────────────────────────────────────────────── */
   const fetchData = async () => {
     try {
       const headerObj = { headers: { Authorization: `Bearer ${token}` } };
-      
+
       const usersRes = await fetch(`${backendUrl}/api/auth/users`, headerObj);
       const usersData = await usersRes.json();
       if (usersData.success) setUsers(usersData.data);
@@ -48,7 +42,6 @@ export const useAdminData = () => {
       const reqsRes = await fetch(`${backendUrl}/api/auth/membership-requests/pending`, headerObj);
       const reqsData = await reqsRes.json();
       if (reqsData.success) setRequests(reqsData.data);
-
     } catch (err) {
       console.error("Data tracking loading exception:", err);
     }
@@ -56,16 +49,14 @@ export const useAdminData = () => {
 
   const fetchPendingLoans = async () => {
     try {
-      // Note: Update this endpoint string when you tie it to your real database query route
       const headerObj = { headers: { Authorization: `Bearer ${token}` } };
       const res = await fetch(`${backendUrl}/api/auth/loans/pending`, headerObj);
       const data = await res.json();
       if (data.success) {
         setLoanRequests(data.data);
       } else {
-        // Fallback mock if data array format returns empty initially
         setLoanRequests([
-          { id: 1, username: "Contributor_Alpha", amount_requested: 8000, purpose: "Business equipment development facility expansion" }
+          { id: 1, username: "Contributor_Alpha", amount_requested: 8000, purpose: "Business equipment development facility expansion" },
         ]);
       }
     } catch (e) {
@@ -78,19 +69,14 @@ export const useAdminData = () => {
     fetchPendingLoans();
   }, []);
 
-
-  /* ==========================================================================
-     ⚙️ ADMINISTRATIVE TRANSACTION PROCESSORS
-     ========================================================================== */
-
-  // 🎯 FIXED: Single Unified Balance/Loan Repayment Handler
+  /* ── Balance / Loan Repayment Handler ────────────────────────────── */
   const handleBalanceAdjustment = async (e) => {
     e.preventDefault();
     if (!amount || !selectedUser) return;
     setLoading(true);
 
     const isLoanPayment = actionType === "pay_loan";
-    const endpoint = isLoanPayment 
+    const endpoint = isLoanPayment
       ? `${backendUrl}/api/auth/loans/repay-direct/${selectedUser.id}`
       : `${backendUrl}/api/auth/users/${selectedUser.id}/${actionType}`;
 
@@ -98,125 +84,160 @@ export const useAdminData = () => {
       const response = await fetch(endpoint, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ amount: Number(amount) })
+        body: JSON.stringify({ amount: Number(amount) }),
       });
 
       if (response.ok) {
-        alert(`Successfully executed transaction: ${actionType.toUpperCase()}!`);
+        triggerPopup(`Transaction executed: ${actionType.toUpperCase()} successful!`, "success");
         setAmount("");
         setSelectedUser(null);
-        setIsModalOpen(false); 
-        fetchData(); // Refresh metrics instantly
+        setIsModalOpen(false);
+        fetchData();
       } else {
         const errData = await response.json();
-        alert(`Error: ${errData.message || "Failed to process transaction."}`);
+        triggerPopup(errData.message || "Failed to process transaction.", "error");
       }
     } catch (err) {
       console.error("Balance alteration submission error:", err);
+      triggerPopup("Network error during transaction processing.", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // 🛡️ LIQUIDITY VALIDATION GUARD LAYER FOR DISBURSING NEW LOANS
+  /* ── Resolve Loan (with liquidity guard) ─────────────────────────── */
   const handleResolveLoan = async (requestId, action) => {
-    const targetLoan = loanRequests.find(l => l.id === requestId);
-    
+    const targetLoan = loanRequests.find((l) => l.id === requestId);
+
+    // Liquidity guard — show custom notify instead of alert
     if (action === "approved" && targetLoan) {
       const loanAmountNeeded = Number(targetLoan.amount_requested);
-      
       if (loanAmountNeeded > availableClubCash) {
-        alert(
-          `❌ TRANSACTION REJECTED:\n` +
-          `Requested Loan: ₦${loanAmountNeeded.toLocaleString()}\n` +
-          `Available Club Liquid Cash: ₦${availableClubCash.toLocaleString()}\n` +
-          `You cannot approve this loan because it exceeds the physical pool cash available!`
+        await notify(
+          `TRANSACTION REJECTED\n\nRequested Loan: ₦${loanAmountNeeded.toLocaleString()}\nAvailable Club Cash: ₦${availableClubCash.toLocaleString()}\n\nThis loan exceeds the available vault cash and cannot be approved.`,
+          "error"
         );
         return;
       }
     }
 
-    const confirmation = window.confirm(`Are you sure you want to change this loan request status to ${action}?`);
-    if (!confirmation) return;
-    
+    const confirmed = await confirm(
+      `Are you sure you want to mark this loan application as ${action}?`,
+      {
+        confirmLabel: action === "approved" ? "Yes, Disburse" : "Yes, Decline",
+        cancelLabel: "Cancel",
+        type: action === "approved" ? "success" : "warning",
+      }
+    );
+    if (!confirmed) return;
+
     try {
       const res = await fetch(`${backendUrl}/api/auth/loans/${requestId}/resolve`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ action })
+        body: JSON.stringify({ action }),
       });
       if (res.ok) {
-        alert(`Loan application successfully marked as ${action}!`);
+        triggerPopup(`Loan application successfully marked as ${action}!`, "success");
         fetchData();
-        setLoanRequests(prev => prev.filter(item => item.id !== requestId));
+        setLoanRequests((prev) => prev.filter((item) => item.id !== requestId));
       }
     } catch (err) {
       console.error("Loan resolution transit fault:", err);
+      triggerPopup("Network error during loan resolution.", "error");
     }
   };
 
+  /* ── Delete User ──────────────────────────────────────────────────── */
   const handleDeleteUser = async (user) => {
     if (user.is_primary_founder || user.role_tier === "main_admin") {
-      alert("Security Violation: The primary organization owner framework cannot be removed from the ledger.");
+      await notify(
+        "Security Violation: The primary organisation owner cannot be removed from the ledger.",
+        "error"
+      );
       return;
     }
-    const firstConfirm = window.confirm(`⚠️ WARNING: Are you sure you want to permanently delete '${user.username}'? This action cannot be undone.`);
-    if (!firstConfirm) return;
 
-    const finalCheck = window.prompt(`Type DELETE to permanently execute account removal for ${user.username}:`);
-    if (finalCheck !== "DELETE") {
-      alert("Account deletion canceled. Validation string mismatch.");
+    const firstConfirmed = await confirm(
+      `⚠️ Are you sure you want to permanently delete '${user.username}'?\n\nThis action cannot be undone.`,
+      { confirmLabel: "Yes, Delete", cancelLabel: "Cancel", type: "warning" }
+    );
+    if (!firstConfirmed) return;
+
+    // Prompt for the confirmation string (replaces window.prompt)
+    const typedValue = await prompt(
+      `Type DELETE to confirm permanent account removal for ${user.username}:`,
+      { placeholder: "DELETE", confirmLabel: "Execute Removal", cancelLabel: "Cancel", type: "error" }
+    );
+    if (typedValue === null) return; // user cancelled
+
+    if (typedValue !== "DELETE") {
+      await notify("Account deletion cancelled — validation string did not match.", "warning");
       return;
     }
+
     try {
       const response = await fetch(`${backendUrl}/api/auth/users/${user.id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        alert(data.message || "User profile cleanly removed.");
+        triggerPopup(data.message || "User profile cleanly removed.", "success");
         if (selectedUser?.id === user.id) setSelectedUser(null);
         fetchData();
+      } else {
+        triggerPopup(data.message || "Failed to delete user.", "error");
       }
     } catch (err) {
       console.error(err);
+      triggerPopup("Network error during account deletion.", "error");
     }
   };
 
+  /* ── Resolve Membership Request ───────────────────────────────────── */
   const handleResolveRequest = async (id, action) => {
     let declineReason = null;
+
     if (action === "declined") {
-      declineReason = window.prompt("Provide explanation note for database logs regarding application declination:");
-      if (declineReason === null) return;
+      // Prompt replaces window.prompt for decline reason
+      declineReason = await prompt(
+        "Provide a reason for declining this membership application:",
+        { placeholder: "Enter reason...", confirmLabel: "Submit Decision", cancelLabel: "Cancel", type: "warning" }
+      );
+      if (declineReason === null) return; // user cancelled
     }
+
     try {
       const res = await fetch(`${backendUrl}/api/auth/membership-requests/${id}/resolve`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ action, declineReason })
+        body: JSON.stringify({ action, declineReason }),
       });
       if (res.ok) {
-        alert("Registry system choice broadcasted successfully!");
+        triggerPopup("Membership decision submitted successfully!", "success");
         fetchData();
       }
     } catch (err) {
       console.error(err);
+      triggerPopup("Network error submitting membership decision.", "error");
     }
   };
 
+  /* ── Role Change ──────────────────────────────────────────────────── */
   const handleRoleChange = async (userId, targetRole) => {
     try {
       const res = await fetch(`${backendUrl}/api/auth/users/${userId}/alter-role`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ targetRole })
+        body: JSON.stringify({ targetRole }),
       });
       const data = await res.json();
-      alert(data.message);
+      triggerPopup(data.message || "Role updated successfully.", "success");
       fetchData();
     } catch (err) {
       console.error(err);
+      triggerPopup("Network error changing user role.", "error");
     }
   };
 
@@ -225,10 +246,7 @@ export const useAdminData = () => {
     isModalOpen, setIsModalOpen,
     amount, setAmount, actionType, setActionType, loading, viewTab, setViewTab, isMainAdmin,
     fetchData, handleBalanceAdjustment, handleResolveLoan,
-    handleDeleteUser, handleResolveRequest, handleRoleChange, 
-    
-    totalPoolLiquidity,
-    totalActiveLoansIssued,
-    availableClubCash
+    handleDeleteUser, handleResolveRequest, handleRoleChange,
+    totalPoolLiquidity, totalActiveLoansIssued, availableClubCash,
   };
 };

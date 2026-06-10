@@ -1,0 +1,150 @@
+/* =====================================================
+   dialog-renderer.css  — OHC Custom Dialog System
+   ===================================================== */
+
+/* Backdrop overlay */
+.dlg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  display: flex;
+  align-items: flex-start;        /* sits near top, like browser dialogs */
+  justify-content: center;
+  padding-top: 80px;
+  z-index: 99999;
+  animation: dlgFadeIn 0.18s ease;
+}
+
+@keyframes dlgFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Dialog box */
+.dlg-box {
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  padding: 28px 28px 22px;
+  width: 100%;
+  max-width: 440px;
+  animation: dlgSlideDown 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes dlgSlideDown {
+  from { transform: translateY(-20px) scale(0.97); opacity: 0; }
+  to   { transform: translateY(0)     scale(1);    opacity: 1; }
+}
+
+/* Header row */
+.dlg-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.dlg-icon {
+  font-size: 24px;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+.dlg-message {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.5;
+  white-space: pre-wrap;   /* preserves \n in multi-line messages */
+}
+
+/* Optional detail paragraph */
+.dlg-detail {
+  margin: 8px 0 0 38px;    /* indent to align with message text */
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* Prompt text input */
+.dlg-input {
+  display: block;
+  width: 100%;
+  margin: 18px 0 0;
+  padding: 11px 14px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  background: #f8fafc;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.dlg-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #ffffff;
+}
+
+/* Action button row */
+.dlg-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+/* Base button */
+.dlg-btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  min-width: 90px;
+}
+
+.dlg-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+.dlg-btn:active { opacity: 1;    transform: translateY(0); }
+
+/* Cancel — neutral grey */
+.dlg-btn-cancel {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.dlg-btn-cancel:hover { background: #e2e8f0; }
+
+/* Confirm — colour injected inline from typeAccent */
+.dlg-btn-confirm {
+  color: #ffffff;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 480px) {
+  .dlg-overlay {
+    padding-top: 40px;
+    padding-left: 16px;
+    padding-right: 16px;
+    align-items: flex-start;
+  }
+
+  .dlg-box {
+    padding: 22px 18px 18px;
+  }
+
+  .dlg-message { font-size: 14px; }
+
+  .dlg-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .dlg-btn { width: 100%; text-align: center; }
+}

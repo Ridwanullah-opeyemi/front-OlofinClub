@@ -11,6 +11,7 @@ import MemberDashboard from "./page/MemberDashboard";
 import AdminDashboard from "./page/AdminDashboard";
 
 import "./App.css";
+import ResetPassword from "./page/ResetPassword";
 
 // 🛡️ Guard for Regular Users/Members
 const MemberRoute = ({ children }) => {
@@ -42,32 +43,37 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        
+
         {/* 🌐 PUBLIC LANDING ROUTES */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        
+
         {/* 📩 UPDATED: Dynamic route string matching the exact Link path from your Login interface */}
         <Route path="/MembershipRequestForm" element={<MembershipRequest />} />
 
         {/* 👥 PROTECTED MEMBER ROUTE */}
-        <Route 
-          path="/dashboard" 
+        <Route
+          path="/dashboard"
           element={
             <MemberRoute>
               <MemberDashboard />
             </MemberRoute>
-          } 
+          }
         />
 
         {/* 👑 PROTECTED ADMIN ROUTE */}
-        <Route 
-          path="/admin-dashboard" 
+        <Route
+          path="/admin-dashboard"
           element={
             <AdminRoute>
               <AdminDashboard />
             </AdminRoute>
-          } 
+          }
+        />
+
+        <Route
+          path="/reset-password/:token"
+          element={<ResetPassword />}
         />
 
         {/* 🔄 FALLBACK CATCH-ALL: Redirects random typos back to the landing page */}

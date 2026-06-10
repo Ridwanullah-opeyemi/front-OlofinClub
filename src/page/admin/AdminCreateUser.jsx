@@ -1,22 +1,14 @@
 import React, { useState } from "react";
-import "../styles/admin-create-user-isolated.css"; // 🎯 Import our brand new, standalone stylesheet
+import "../styles/admin-create-user-isolated.css";
 
-function AdminCreateUser({ onUserCreated }) {
-  const [formData, setFormData] = useState({
-    username: "", 
-    email: "",
-    phone: "",
-    password: "",
-  });
+function AdminCreateUser({ onUserCreated, triggerPopup }) {
+  const [formData, setFormData] = useState({ username: "", email: "", phone: "", password: "" });
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleCreateUser = async (e) => {
@@ -28,7 +20,7 @@ function AdminCreateUser({ onUserCreated }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}` 
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
@@ -36,18 +28,15 @@ function AdminCreateUser({ onUserCreated }) {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        alert("✨ New user profile successfully provisioned!");
+        triggerPopup("✨ New user profile successfully provisioned!", "success");
         setFormData({ username: "", email: "", phone: "", password: "" });
-        
-        if (onUserCreated) {
-          onUserCreated(); 
-        }
+        if (onUserCreated) onUserCreated();
       } else {
-        alert(data.message || "Failed to provision new account context registry entry.");
+        triggerPopup(data.message || "Failed to provision new account context registry entry.", "error");
       }
     } catch (err) {
       console.error("Account Creation Interruption Error:", err);
-      alert("Network breakdown during member registration profile transmission.");
+      triggerPopup("Network breakdown during member registration profile transmission.", "error");
     } finally {
       setLoading(false);
     }
@@ -63,60 +52,20 @@ function AdminCreateUser({ onUserCreated }) {
       <form onSubmit={handleCreateUser} className="adjustment-form">
         <div className="form-group">
           <label className="form-label">System Username</label>
-          <input
-            type="text"
-            name="username"
-            value={formData.username}
-            placeholder="e.g. JohnDoe"
-            className="admin-create-input-unique" /* 🎯 New Isolated Class */
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
+          <input type="text" name="username" value={formData.username} placeholder="e.g. JohnDoe" className="admin-create-input-unique" onChange={handleChange} required disabled={loading} />
         </div>
-
         <div className="form-group">
           <label className="form-label">Email Address</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            placeholder="e.g. user@wealthbridge.com"
-            className="admin-create-input-unique" /* 🎯 New Isolated Class */
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
+          <input type="email" name="email" value={formData.email} placeholder="e.g. user@wealthbridge.com" className="admin-create-input-unique" onChange={handleChange} required disabled={loading} />
         </div>
-
         <div className="form-group">
           <label className="form-label">Phone Contact String</label>
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            placeholder="e.g. +234..."
-            className="admin-create-input-unique" /* 🎯 New Isolated Class */
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
+          <input type="text" name="phone" value={formData.phone} placeholder="e.g. +234..." className="admin-create-input-unique" onChange={handleChange} required disabled={loading} />
         </div>
-
         <div className="form-group">
           <label className="form-label">Initial Temp Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            placeholder="••••••••"
-            className="admin-create-input-unique" /* 🎯 New Isolated Class */
-            onChange={handleChange}
-            required
-            disabled={loading}
-          />
+          <input type="password" name="password" value={formData.password} placeholder="••••••••" className="admin-create-input-unique" onChange={handleChange} required disabled={loading} />
         </div>
-
         <div className="form-actions">
           <button type="submit" disabled={loading} className="confirm-btn" style={{ background: "#3498db" }}>
             {loading ? "Registering..." : "⚡ Create Member Account"}

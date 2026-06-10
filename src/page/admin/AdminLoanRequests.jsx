@@ -1,25 +1,50 @@
 import React, { useState, useEffect } from "react";
-import "../styles/admin-dashboard.css"; 
+import "../styles/admin-dashboard.css";
 
-function AdminLoanRequests({ onRefresh }) {
+function AdminLoanRequests({
+  onRefresh,
+  triggerPopup,
+  notify,
+  confirm,
+}) {
   const [loans, setLoans] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Track which loan is currently being processed
+  const [processingId, setProcessingId] = useState(null);
+
   const token = localStorage.getItem("token");
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchPendingLoans = async () => {
     try {
       setLoading(true);
-      // 🎯 FIXED: Pointing directly to /api/auth/loans/pending
-      const response = await fetch(`${backendUrl}/api/auth/loans/pending`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+
+      const response = await fetch(
+        `${backendUrl}/api/auth/loans/pending`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       const data = await response.json();
+
       if (response.ok && data.success) {
         setLoans(data.data || []);
+      } else {
+        triggerPopup?.(
+          data.message || "Failed to load pending loans.",
+          "error"
+        );
       }
     } catch (err) {
-      console.error("Critical error syncing loan pipelines:", err);
+      console.error("Loan fetch error:", err);
+      triggerPopup?.(
+        "Unable to retrieve pending loan requests.",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -30,36 +55,80 @@ function AdminLoanRequests({ onRefresh }) {
   }, []);
 
   const handleResolveLoan = async (requestId, action) => {
-    const messageConfirm = `Are you certain you want to mark this application as ${action}?`;
-    if (!window.confirm(messageConfirm)) return;
+    if (processingId) return;
+
+    const confirmed = await confirm(
+      `Are you certain you want to ${action} this loan request?`,
+      {
+        confirmLabel:
+          action === "approved"
+            ? "Approve Loan"
+            : "Decline Loan",
+        cancelLabel: "Cancel",
+        type:
+          action === "approved"
+            ? "success"
+            : "warning",
+      }
+    );
+
+    if (!confirmed) return;
 
     try {
-      const response = await fetch(`${backendUrl}/api/auth/loans/${requestId}/resolve`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ action })
-      });
+      setProcessingId(requestId);
+
+      const response = await fetch(
+        `${backendUrl}/api/auth/loans/${requestId}/resolve`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ action }),
+        }
+      );
 
       const data = await response.json();
+
       if (response.ok && data.success) {
-        alert(`Loan application portfolio successfully updated to: ${action}`);
-        fetchPendingLoans();
-        if (onRefresh) onRefresh();
+        triggerPopup(
+          action === "approved"
+            ? "Loan approved successfully."
+            : "Loan request declined.",
+          "success"
+        );
+
+        // Remove processed loan immediately
+        setLoans((prev) =>
+          prev.filter((loan) => loan.id !== requestId)
+        );
+
+        if (onRefresh) {
+          onRefresh();
+        }
       } else {
-        alert(data.message || "An issue occurred tracking resolution metrics.");
+        triggerPopup(
+          data.message || "Failed to process loan request.",
+          "error"
+        );
       }
     } catch (err) {
-      console.error("Loan resolution pipeline breakage:", err);
+      console.error("Loan approval error:", err);
+
+      triggerPopup(
+        "Network error while processing request.",
+        "error"
+      );
+    } finally {
+      setProcessingId(null);
     }
   };
 
   if (loading) {
     return (
       <div className="admin-loading-notice">
-        Auditing pending application profiles...
+        Auditing pending loan applications...
       </div>
     );
   }
@@ -68,7 +137,10 @@ function AdminLoanRequests({ onRefresh }) {
     <div className="repayments-view-wrapper">
       <div className="repayments-header">
         <h2>Loan Applications Review Pipeline</h2>
-        <p>Examine borrow requests, evaluate intent criteria, and disburse community funding liquidity safely.</p>
+        <p>
+          Review member loan requests and make approval
+          decisions securely.
+        </p>
       </div>
 
       <div className="admin-table-card">
@@ -76,17 +148,21 @@ function AdminLoanRequests({ onRefresh }) {
           <table className="admin-table">
             <thead>
               <tr>
-                <th>Applicant Profile</th>
+                <th>Applicant</th>
                 <th>Amount Requested</th>
-                <th>Stated Capital Purpose / Use Case</th>
-                <th className="text-center">Review Decisions</th>
+                <th>Purpose</th>
+                <th className="text-center">Actions</th>
               </tr>
             </thead>
+
             <tbody>
               {loans.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className="empty-table-notice">
-                    🎉 No active loan applications currently waiting inside the clearance vault.
+                  <td
+                    colSpan="4"
+                    className="empty-table-notice"
+                  >
+                    🎉 No pending loan requests available.
                   </td>
                 </tr>
               ) : (
@@ -95,30 +171,60 @@ function AdminLoanRequests({ onRefresh }) {
                     <td>
                       <div className="user-profile-cell">
                         <strong>{loan.username}</strong>
-                        <small>Account Reference ID: #{loan.user_id}</small>
+                        <small>
+                          Member ID #{loan.user_id}
+                        </small>
                       </div>
                     </td>
+
                     <td className="loan-amount-highlight">
-                      ₦{Number(loan.amount_requested).toLocaleString()}
+                      ₦
+                      {Number(
+                        loan.amount_requested
+                      ).toLocaleString()}
                     </td>
+
                     <td>
                       <div className="purpose-context-box">
-                        {loan.purpose || "No descriptive contextual layout provided by user."}
+                        {loan.purpose ||
+                          "No purpose provided."}
                       </div>
                     </td>
+
                     <td>
                       <div className="action-button-group">
-                        <button 
-                          onClick={() => handleResolveLoan(loan.id, "approved")} 
+                        <button
                           className="btn-action-disburse"
+                          disabled={
+                            processingId === loan.id
+                          }
+                          onClick={() =>
+                            handleResolveLoan(
+                              loan.id,
+                              "approved"
+                            )
+                          }
                         >
-                          ✓ Disburse Cash
+                          {processingId === loan.id
+                            ? "⏳ Processing..."
+                            : "✓ Approve"}
                         </button>
-                        <button 
-                          onClick={() => handleResolveLoan(loan.id, "declined")} 
+
+                        <button
                           className="btn-action-decline"
+                          disabled={
+                            processingId === loan.id
+                          }
+                          onClick={() =>
+                            handleResolveLoan(
+                              loan.id,
+                              "declined"
+                            )
+                          }
                         >
-                          ✕ Decline File
+                          {processingId === loan.id
+                            ? "⏳ Processing..."
+                            : "✕ Decline"}
                         </button>
                       </div>
                     </td>
