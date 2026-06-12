@@ -5,8 +5,8 @@ function AdminRepayments({ onRefresh, triggerPopup, notify, confirm }) {
   const [repayments, setRepayments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Prevent multiple clicks
-  const [processingId, setProcessingId] = useState(null);
+  // 🔒 Per-row lock: tracks repayment IDs currently being processed
+  const [processingIds, setProcessingIds] = useState(new Set());
 
   const token = localStorage.getItem("token");
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -14,20 +14,12 @@ function AdminRepayments({ onRefresh, triggerPopup, notify, confirm }) {
   const fetchPendingRepayments = async () => {
     try {
       setLoading(true);
-
-      const response = await fetch(
-        `${backendUrl}/api/auth/loans/repayments/pending`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
+      const response = await fetch(`${backendUrl}/api/auth/loans/repayments/pending`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const data = await response.json();
-
       if (response.ok && data.success) {
-        setRepayments(data.data || []);
+        setRepayments(data.data);
       }
     } catch (err) {
       console.error("Error loading repayment pipelines:", err);
@@ -41,28 +33,23 @@ function AdminRepayments({ onRefresh, triggerPopup, notify, confirm }) {
   }, []);
 
   const handleResolveRepayment = async (repaymentId, action) => {
-    if (processingId) return;
+    // 🔒 Guard: bail out immediately if this row is already in flight
+    if (processingIds.has(repaymentId)) return;
 
     const confirmed = await confirm(
       `Are you sure you want to mark this repayment record as ${action}?`,
       {
-        confirmLabel:
-          action === "approved"
-            ? "Yes, Clear Debt"
-            : "Yes, Reject",
+        confirmLabel: action === "approved" ? "Yes, Clear Debt" : "Yes, Reject",
         cancelLabel: "Cancel",
-        type:
-          action === "approved"
-            ? "success"
-            : "warning",
+        type: action === "approved" ? "success" : "warning",
       }
     );
-
     if (!confirmed) return;
 
-    try {
-      setProcessingId(repaymentId);
+    // 🔒 Lock row immediately after admin confirms
+    setProcessingIds((prev) => new Set(prev).add(repaymentId));
 
+    try {
       const response = await fetch(
         `${backendUrl}/api/auth/loans/repayments/${repaymentId}/resolve`,
         {
@@ -76,49 +63,40 @@ function AdminRepayments({ onRefresh, triggerPopup, notify, confirm }) {
       );
 
       const data = await response.json();
-
       if (response.ok && data.success) {
         triggerPopup(
           `Repayment slip successfully marked as ${action}!`,
           "success"
         );
-
-        // Remove immediately from UI
-        setRepayments((prev) =>
-          prev.filter((r) => r.id !== repaymentId)
-        );
-
-        if (onRefresh) {
-          onRefresh();
-        }
+        // Remove row immediately — no unlock needed since row is gone
+        setRepayments((prev) => prev.filter((r) => r.id !== repaymentId));
+        if (onRefresh) onRefresh();
       } else {
         triggerPopup(
-          data.message ||
-            "Failed to process decision parameters.",
+          data.message || "Failed to process decision parameters.",
           "error"
         );
+        // 🔓 Unlock on failure so admin can retry
+        setProcessingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(repaymentId);
+          return next;
+        });
       }
     } catch (err) {
-      console.error(
-        "Repayment system resolution transit breakdown:",
-        err
-      );
-
-      triggerPopup(
-        "Network error during repayment resolution.",
-        "error"
-      );
-    } finally {
-      setProcessingId(null);
+      console.error("Repayment system resolution transit breakdown:", err);
+      triggerPopup("Network error during repayment resolution.", "error");
+      // 🔓 Unlock on network error
+      setProcessingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(repaymentId);
+        return next;
+      });
     }
   };
 
   if (loading) {
-    return (
-      <div className="admin-loading-notice">
-        Synchronizing Audit Records...
-      </div>
-    );
+    return <div className="admin-loading-notice">Synchronizing Audit Records...</div>;
   }
 
   return (
@@ -126,8 +104,8 @@ function AdminRepayments({ onRefresh, triggerPopup, notify, confirm }) {
       <div className="repayments-header">
         <h2>Loan Settlements Review Pipe</h2>
         <p>
-          Verify bank transfer metadata logs and confirm
-          outstanding user debt cancellations.
+          Verify bank transfer metadata logs and confirm outstanding user debt
+          cancellations.
         </p>
       </div>
 
@@ -139,85 +117,56 @@ function AdminRepayments({ onRefresh, triggerPopup, notify, confirm }) {
                 <th>Contributor Account</th>
                 <th>Settle Target Amount</th>
                 <th>Payment Reference Proof Notes</th>
-                <th className="text-center">
-                  Review Decisions
-                </th>
+                <th className="text-center">Review Decisions</th>
               </tr>
             </thead>
-
             <tbody>
               {repayments.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan="4"
-                    className="empty-table-notice"
-                  >
-                    🎉 No pending loan repayment submissions
-                    waiting for audit clearance.
+                  <td colSpan="4" className="empty-table-notice">
+                    🎉 No pending loan repayment submissions waiting for audit clearance.
                   </td>
                 </tr>
               ) : (
-                repayments.map((r) => (
-                  <tr key={r.id}>
-                    <td>
-                      <div className="user-profile-cell">
-                        <strong>{r.username}</strong>
-                        <small>UID: #{r.user_id}</small>
-                      </div>
-                    </td>
-
-                    <td className="repay-amount-highlight">
-                      ₦
-                      {Number(
-                        r.amount_paid
-                      ).toLocaleString()}
-                    </td>
-
-                    <td>
-                      <div className="proof-context-box">
-                        {r.reference_proof}
-                      </div>
-                    </td>
-
-                    <td>
-                      <div className="action-button-group">
-                        <button
-                          className="btn-action-clear-debt"
-                          disabled={
-                            processingId === r.id
-                          }
-                          onClick={() =>
-                            handleResolveRepayment(
-                              r.id,
-                              "approved"
-                            )
-                          }
-                        >
-                          {processingId === r.id
-                            ? "⏳ Processing..."
-                            : "✓ Clear Debt"}
-                        </button>
-
-                        <button
-                          className="btn-action-reject"
-                          disabled={
-                            processingId === r.id
-                          }
-                          onClick={() =>
-                            handleResolveRepayment(
-                              r.id,
-                              "declined"
-                            )
-                          }
-                        >
-                          {processingId === r.id
-                            ? "⏳ Processing..."
-                            : "✕ Reject"}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                repayments.map((r) => {
+                  const isProcessing = processingIds.has(r.id);
+                  return (
+                    <tr key={r.id}>
+                      <td>
+                        <div className="user-profile-cell">
+                          <strong>{r.username}</strong>
+                          <small>UID: #{r.user_id}</small>
+                        </div>
+                      </td>
+                      <td className="repay-amount-highlight">
+                        ₦{Number(r.amount_paid).toLocaleString()}
+                      </td>
+                      <td>
+                        <div className="proof-context-box">{r.reference_proof}</div>
+                      </td>
+                      <td>
+                        <div className="action-button-group">
+                          <button
+                            onClick={() => handleResolveRepayment(r.id, "approved")}
+                            className="btn-action-clear-debt"
+                            disabled={isProcessing}
+                            style={isProcessing ? { opacity: 0.55, cursor: "not-allowed" } : {}}
+                          >
+                            {isProcessing ? "⏳ Processing..." : "✓ Clear Debt"}
+                          </button>
+                          <button
+                            onClick={() => handleResolveRepayment(r.id, "declined")}
+                            className="btn-action-reject"
+                            disabled={isProcessing}
+                            style={isProcessing ? { opacity: 0.55, cursor: "not-allowed" } : {}}
+                          >
+                            {isProcessing ? "⏳ Processing..." : "✕ Reject"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

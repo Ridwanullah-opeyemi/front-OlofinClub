@@ -43,11 +43,7 @@ function AdminCreateUser({ onUserCreated, triggerPopup }) {
   };
 
   return (
-    <div className="adjustment-card" style={{ borderTop: "4px solid #3498db" }}>
-      <h3>👥 Provision New Member Account</h3>
-      <p style={{ color: "#7f8c8d", fontSize: "13px", marginBottom: "15px" }}>
-        Directly initialize a verified user profile to the database pool.
-      </p>
+    <div>
 
       <form onSubmit={handleCreateUser} className="adjustment-form">
         <div className="form-group">

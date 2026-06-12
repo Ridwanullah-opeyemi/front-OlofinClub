@@ -85,7 +85,7 @@ function MembershipRequest() {
           <input 
             type="text" 
             name="username" 
-            placeholder="Choose a Username" 
+            placeholder="Username" 
             value={formData.username} 
             onChange={handleChange} 
             className="form-input"

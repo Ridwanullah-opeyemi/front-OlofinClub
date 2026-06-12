@@ -146,7 +146,7 @@ function AdminDashboard() {
             {pendingRepayCount > 0 && <span className="repay-alert-badge">{pendingRepayCount}</span>}
           </button>
           <button type="button" onClick={() => setActiveTab("transactions")} className={`admin-row-btn ${activeTab === "transactions" ? "active" : ""}`}>
-            📊 Ledger
+            📊 Transaction History
           </button>
           <button type="button" onClick={() => setActiveTab("chat")} className={`admin-row-btn ${activeTab === "chat" ? "active" : ""}`}>
             💬 Chat
