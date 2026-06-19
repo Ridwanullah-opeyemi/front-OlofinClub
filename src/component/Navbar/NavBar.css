@@ -1,10 +1,3 @@
-/* ============================================================
-   OHC NAVBAR — redesigned
-   Design: frosted left-border brand mark, pill nav links,
-   cyan accent on a deep navy base, slide-in mobile drawer
-   ============================================================ */
-
-/* ---------- Base ---------- */
 .ohc-nav {
   position: sticky;
   top: 0;

@@ -2,10 +2,10 @@
 // All sections match dropdown anchor IDs in Navbar.jsx
 
 import React from "react";
-import Navbar from "../component/Navbar/Navbar";
 import Hero from "../component/Hero.jsx/Hero";
 import About from "../component/About/About";
 import "./home.css";
+import Navbar from "../component/Navbar/Navbar";
 
 function Home() {
   return (
