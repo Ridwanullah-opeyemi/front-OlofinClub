@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import "./Navbar.css";
+import "./navBar.css";
 import logo from "../../assets/logo.jpg";
 
 const NAV_ITEMS = [
