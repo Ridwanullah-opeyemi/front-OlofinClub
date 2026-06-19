@@ -8,8 +8,8 @@
   gap: 16px;
   padding: 0 32px;
   height: 72px;
-  /* background: #020a16; */
-  /* border-bottom: 1px solid rgba(34, 211, 238, 0.18) */
+  background: #020a16;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.18)
 }
 
 /* ---------- Brand ---------- */
