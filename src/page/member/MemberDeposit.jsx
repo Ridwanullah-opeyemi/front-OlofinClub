@@ -129,8 +129,9 @@ function MemberDeposit() {
             Remit your financial target capital assets to the following parameters structure before lodging a verification log request:
           </p>
           <div className="bank-details-wrapper">
-            <p><strong>Bank Code:</strong> WealthBridge Central Trust</p>
-            <p><strong>Account Reference ID:</strong> 1029485731</p>
+            <p><strong>Full Name: </strong>Olofin Heritage Club of Nigeria</p>
+            <p><strong>Bank Code:</strong> Zenith Bank</p>
+            <p><strong>Account Reference ID:</strong> 1310808368</p>
           </div>
         </div>
       </div>

@@ -1,0 +1,439 @@
+/* home.css — Olofin Heritage Club landing page sections */
+
+/* ─── Root ─── */
+.home-root {
+  background: #02111f;
+  color: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+/* ─── Section shell ─── */
+.info-section {
+  padding: 80px 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.alt-bg {
+  background: rgba(0, 0, 0, 0.25);
+  max-width: 100%;
+  padding: 80px 60px;
+}
+
+.alt-bg > * {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #28c7ff;
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  color: #ffffff;
+}
+
+.section-lead {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.7;
+  max-width: 660px;
+  margin-bottom: 40px;
+}
+
+.section-footnote {
+  margin-top: 28px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ─── Card grids ─── */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.three-col {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* ─── Generic info card ─── */
+.info-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 26px 24px;
+  transition: border-color 0.2s;
+}
+
+.info-card:hover {
+  border-color: rgba(40, 199, 255, 0.3);
+}
+
+.info-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #28c7ff;
+  margin-bottom: 12px;
+}
+
+.info-card p,
+.info-card li {
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.info-card ul {
+  padding-left: 18px;
+}
+
+.highlight-card {
+  border-color: rgba(40, 199, 255, 0.25);
+  background: rgba(40, 199, 255, 0.06);
+}
+
+/* ─── Stat cards ─── */
+.stat-card {
+  background: rgba(40, 199, 255, 0.06);
+  border: 1px solid rgba(40, 199, 255, 0.2);
+  border-radius: 14px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #28c7ff;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.stat-card p {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ─── Benefit cards ─── */
+.benefit-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.benefit-icon {
+  font-size: 34px;
+  margin-bottom: 14px;
+}
+
+.benefit-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #28c7ff;
+  margin-bottom: 10px;
+}
+
+.benefit-card p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ─── Rule cards ─── */
+.rule-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 26px 24px;
+  position: relative;
+}
+
+.rule-number {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 28px;
+  font-weight: 800;
+  color: rgba(40, 199, 255, 0.15);
+  line-height: 1;
+}
+
+.rule-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.rule-card p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ─── Fine cards ─── */
+.fine-card {
+  background: rgba(255, 90, 90, 0.06);
+  border: 1px solid rgba(255, 90, 90, 0.15);
+  border-radius: 14px;
+  padding: 24px 22px;
+}
+
+.fine-amount {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ff7070;
+  margin-bottom: 8px;
+}
+
+.fine-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.fine-card p {
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ─── Notice banner ─── */
+.notice-banner {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  background: rgba(255, 200, 0, 0.07);
+  border: 1px solid rgba(255, 200, 0, 0.25);
+  border-radius: 14px;
+  padding: 28px 30px;
+  max-width: 760px;
+}
+
+.notice-icon {
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.notice-banner p {
+  font-size: 15px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ─── Notice badge (meetings) ─── */
+.notice-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #28c7ff;
+  background: rgba(40, 199, 255, 0.1);
+  border: 1px solid rgba(40, 199, 255, 0.2);
+  border-radius: 4px;
+  padding: 3px 8px;
+  margin-bottom: 10px;
+}
+
+/* ─── Officers grid ─── */
+.officer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.officer-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px 18px;
+  transition: border-color 0.2s;
+}
+
+.officer-card:hover {
+  border-color: rgba(40, 199, 255, 0.3);
+}
+
+.officer-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #28c7ff;
+  margin-bottom: 8px;
+}
+
+.officer-card p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ─── Identity grid ─── */
+.identity-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.identity-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.identity-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 700;
+}
+
+.identity-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.4;
+}
+
+/* ─── Objectives list ─── */
+.objectives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+}
+
+.objective-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.objective-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: rgba(40, 199, 255, 0.4);
+  flex-shrink: 0;
+  min-width: 36px;
+  line-height: 1.5;
+}
+
+.objective-row p {
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ─── Value cards ─── */
+.value-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 28px 24px;
+  text-align: center;
+}
+
+.value-icon {
+  font-size: 30px;
+  margin-bottom: 14px;
+}
+
+.value-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #28c7ff;
+  margin-bottom: 10px;
+}
+
+.value-card p {
+  font-size: 14px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* ─── Footer ─── */
+.site-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 40px 60px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.footer-logo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #28c7ff;
+}
+
+.footer-motto {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.footer-legal {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 1.8;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .info-section,
+  .alt-bg {
+    padding: 60px 24px;
+  }
+
+  .section-title {
+    font-size: 26px;
+  }
+
+  .three-col {
+    grid-template-columns: 1fr;
+  }
+
+  .site-footer {
+    padding: 40px 24px;
+  }
+}

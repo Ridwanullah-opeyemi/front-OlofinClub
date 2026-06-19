@@ -1,66 +1,74 @@
 import React from "react";
 import "./Hero.css";
-
 import heroBg from "../../assets/hero-bg.png";
 
 function Hero() {
-  // Smooth scroll helper to jump directly to sections on the landing page
-  const scrollToSection = (id) => {
-    const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({
-        behavior: "smooth",
-      });
-    }
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section
-      id="home"
-      className="hero"
-      style={{
-        backgroundImage: `url(${heroBg})`,
-      }}
-    >
-      <div className="hero-overlay">
-        <div className="hero-content">
-          
-          <span className="hero-badge">
-            TRUSTED CLUB FOR SAVING TOGETHER
+    <section id="home" className="ohc-hero" style={{ backgroundImage: `url(${heroBg})` }}>
+      <div className="ohc-hero-overlay">
+        <div className="ohc-hero-content">
+
+          {/* Badge */}
+          <span className="ohc-hero-badge">
+            <span className="ohc-hero-badge-dot" />
+            Registered · RC: 7112960 · Heritage Club
           </span>
 
-          <h1>
-            SAVE YOUR MONEY AND GROW SECURELY WITH US
+          {/* Headline */}
+          <h1 className="ohc-hero-h1">
+            Save Together.<br />
+            <span className="ohc-hero-h1-accent">Grow Together.</span>
           </h1>
 
-          <p>
-            Welcome to Olofin Heritage Club. We provide a safe, simple, and honest 
-            space where members can save money together, request quick group help, 
-            and track their financial progress without any worries.
+          {/* Motto */}
+          <p className="ohc-hero-motto">ONE LOVE KEEP US TOGETHER</p>
+
+          {/* Description */}
+          <p className="ohc-hero-desc">
+            Olofin Heritage Club is a trusted Nigerian savings community where
+            mature members pool resources, access soft loans, and support each
+            other — governed by a clear constitution since 2022.
           </p>
 
-          <div className="hero-btns">
-            <button 
-              className="primary-btn"
-              onClick={() => scrollToSection("about")}
-            >
-              Learn More
+          {/* Buttons */}
+          <div className="ohc-hero-btns">
+            <button className="ohc-hero-btn-primary" onClick={() => scrollTo("about")}>
+              Discover the Club
             </button>
-
-            <button 
-              className="secondary-btn"
-              onClick={() => scrollToSection("rules")}
-            >
-              Club Rules
+            <button className="ohc-hero-btn-ghost" onClick={() => scrollTo("membership")}>
+              How to Join
             </button>
           </div>
 
-          <div className="notice-card">
-            <h4>IMPORTANT NOTICE</h4>
+          {/* Stat strip */}
+          <div className="ohc-hero-stats">
+            <div className="ohc-hero-stat">
+              <span className="ohc-hero-stat-value">₦5,000</span>
+              <span className="ohc-hero-stat-label">Monthly Contribution</span>
+            </div>
+            <div className="ohc-hero-stat-divider" />
+            <div className="ohc-hero-stat">
+              <span className="ohc-hero-stat-value">₦500</span>
+              <span className="ohc-hero-stat-label">Monthly Dues</span>
+            </div>
+            <div className="ohc-hero-stat-divider" />
+            <div className="ohc-hero-stat">
+              <span className="ohc-hero-stat-value">2 Loans</span>
+              <span className="ohc-hero-stat-label">Soft & Normal</span>
+            </div>
+          </div>
+
+          {/* Notice */}
+          <div className="ohc-hero-notice">
+            <span className="ohc-hero-notice-icon">🔒</span>
             <p>
-              To protect our funds, only group administrators are allowed to create 
-              accounts, approve deposits, change money records, or remove users 
-              from this network.
+              <strong>Admin-controlled platform.</strong> Only group administrators
+              can create accounts, approve deposits, and update wallet records —
+              keeping every naira safe and fully audited.
             </p>
           </div>
 

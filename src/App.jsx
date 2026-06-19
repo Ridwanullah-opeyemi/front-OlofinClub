@@ -9,8 +9,6 @@ import MembershipRequest from "./page/MembershipRequestForm";
 // Protected Dashboard Pages
 import MemberDashboard from "./page/MemberDashboard";
 import AdminDashboard from "./page/AdminDashboard";
-
-import "./App.css";
 import ResetPassword from "./page/ResetPassword";
 
 // 🛡️ Guard for Regular Users/Members

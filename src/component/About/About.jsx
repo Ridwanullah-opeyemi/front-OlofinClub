@@ -1,180 +1,222 @@
-import React from "react";
+import React, { useState } from "react";
 import "./About.css";
 
-function About() {
+// All content sourced from the Olofin Heritage Club Constitution PDF
+const ABOUT_CARDS = [
+  {
+    id: "mission",
+    icon: "🎯",
+    title: "Mission & Vision",
+    summary: "Why we exist and where we are headed",
+    content: {
+      heading: "Our Mission & Vision",
+      body: [
+        "We the members of Olofin Heritage Club have firmly resolved to associate and work in unity and harmony as one indivisible body for the purpose of encouraging, socialising and coordinating ourselves for our own wellbeing.",
+        "Our vision is to expand into a highly trusted mutual-aid network that serves generations to come — building smarter systems that make community banking smooth, simple, and fully transparent for every member.",
+      ],
+    },
+  },
+  {
+    id: "identity",
+    icon: "🏛️",
+    title: "Club Identity",
+    summary: "Name, motto, slogan and registration details",
+    content: {
+      heading: "Club Identity",
+      table: [
+        { label: "Full Name", value: "Olofin Heritage Club of Nigeria" },
+        { label: "RC Number", value: "RC: 7112960" },
+        { label: "Bank Account", value: "1310808368 — Zenith Bank" },
+        { label: "Secretariat", value: "Okeho, Oyo State" },
+        { label: "Motto", value: "ONE LOVE KEEP US TOGETHER" },
+        { label: "Slogan", value: "People of Like Mind" },
+        { label: "Type", value: "Non-religious, Non-tribal, Non-political, Non-governmental" },
+        { label: "Constitution", value: "Dated August 2024" },
+      ],
+    },
+  },
+  {
+    id: "objectives",
+    icon: "📋",
+    title: "Aims & Objectives",
+    summary: "Six core goals that guide everything we do",
+    content: {
+      heading: "Aims & Objectives",
+      list: [
+        "Establish high and reputable friendship that will help members see themselves as one.",
+        "Promote the general interest of the members and extend its usefulness for the good of our communities.",
+        "Promote advancement of knowledge in wealth creation, future security, dreams realisation and developmental programs.",
+        "Initiate and consider any legislation relevant to the objects of the club.",
+        "Engage in any other lawful activities conducive to the promotion of the club's objectives, for profit or non-profit purposes.",
+        "Have respect for every member's personality.",
+      ],
+    },
+  },
+  {
+    id: "values",
+    icon: "💎",
+    title: "Core Values",
+    summary: "Honesty, auditing and family unity",
+    content: {
+      heading: "Core Values",
+      values: [
+        {
+          icon: "📖",
+          name: "Absolute Honesty",
+          desc: "Every single naira that enters the club is immediately recorded on an open ledger. No hidden fees, no secret transactions, zero guesswork.",
+        },
+        {
+          icon: "🔍",
+          name: "Careful Auditing",
+          desc: "Admin teams run constant checks on all database inputs, matching every digital record against real-world bank statements.",
+        },
+        {
+          icon: "🤝",
+          name: "Total Family Unity",
+          desc: "All members are treated with equal respect and kept fully informed of how their contributions are being handled at all times.",
+        },
+      ],
+    },
+  },
+  {
+    id: "platform-rules",
+    icon: "🛡️",
+    title: "Platform Rules",
+    summary: "Admin control, account creation and wallet protection",
+    content: {
+      heading: "Platform Rules",
+      list: [
+        "Only a verified system administrator can add a new user account. Self-registration is not permitted.",
+        "Every profile remains locked until an admin cross-checks physical registration details and manually activates the account.",
+        "Members cannot change their own wallet balances. Only an admin can update your wallet after verifying a real bank receipt.",
+        "Only authorised administrators have the power to delete a member's data from the platform.",
+        "Members can only view their own wallet info, saving progress and transaction history — never another member's balance.",
+      ],
+    },
+  },
+  {
+    id: "officers",
+    icon: "👥",
+    title: "Officers & Roles",
+    summary: "President, Secretary, Treasurer and more",
+    content: {
+      heading: "Officers of the Club",
+      roles: [
+        { name: "President", duty: "Presides over all meetings and events; category 'A' signatory to the club's account; gives annual stewardship report." },
+        { name: "Vice President", duty: "Assists the President and assumes full capacity in his absence; Chairman of the Financial Committee." },
+        { name: "General Secretary", duty: "Records all meeting proceedings; summons meetings in consultation with the President; jointly signs adopted minutes." },
+        { name: "Assistant Secretary", duty: "Assists the Secretary in all duties and acts in full capacity during absence." },
+        { name: "Financial Secretary", duty: "Collects all fees, levies and monies; category 'B' signatory; prepares annual financial reports." },
+        { name: "Treasurer", duty: "Safeguards the club's money; issues receipts; deposits all meeting funds to the club's account within 3 days." },
+        { name: "PRO", duty: "Handles all public statements, communications, publications and social media for the club." },
+        { name: "Welfare Officer", duty: "Responsible for general welfare; arranges member travel for club activities; chairs the welfare committee." },
+      ],
+    },
+  },
+];
+
+function Modal({ card, onClose }) {
+  if (!card) return null;
+  const { content } = card;
+
   return (
-    <section id="about" className="about-section">
-      <div className="about-overlay">
+    <div className="ohc-modal-backdrop" onClick={onClose} >
+      <div className="ohc-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="ohc-modal-close" onClick={onClose} aria-label="Close">✕</button>
+        <h2 className="ohc-modal-title">{content.heading}</h2>
 
-        {/* HEADER SECTION */}
-        <div className="about-header">
-          <span>ABOUT OLOFIN HERITAGE CLUB</span>
-          <h2>A Simple and Honest Place for Group Financial Growth</h2>
-          <p>
-            Olofin Heritage Club is a community platform where trusted members gather to save money together. 
-            We believe that financial growth happens best when people help each other. Through our organized system, 
-            every single contribution is fully recorded and transparent, while our group administrators monitor 
-            all daily activities to protect our shared funds, keep records straight, and maintain absolute honesty.
-          </p>
-        </div>
+        {/* Plain paragraphs */}
+        {content.body && content.body.map((p, i) => (
+          <p key={i} className="ohc-modal-para">{p}</p>
+        ))}
 
-        {/* MAIN DEEP INFORMATION GRID */}
-        <div className="about-grid">
-
-          {/* EXTENDED MISSION CARD */}
-          <div className="about-card">
-            <h3>Our Big Mission</h3>
-            <p>
-              Our main focus is to build a very safe, clean, and cooperative digital space where members can pool 
-              their financial resources together without any fear of loss or missing records. We aim to break down 
-              complex financial barriers by combining modern database tracking with deep traditional community values. 
-              By working as a single team, we ensure that every member can steadily stack up their long-term savings, 
-              access critical financial support when they need it most, and achieve total peace of mind regarding 
-              their hard-earned money.
-            </p>
+        {/* Identity table */}
+        {content.table && (
+          <div className="ohc-modal-table">
+            {content.table.map((row) => (
+              <div key={row.label} className="ohc-modal-row">
+                <span className="ohc-modal-label">{row.label}</span>
+                <span className="ohc-modal-value">{row.value}</span>
+              </div>
+            ))}
           </div>
+        )}
 
-          {/* EXTENDED VISION CARD */}
-          <div className="about-card">
-            <h3>Our Future Vision</h3>
-            <p>
-              We want to expand the Olofin Heritage Club into a massive, highly trusted mutual-aid network that 
-              serves generations to come. We plan to build smarter automated ledger systems that make community 
-              banking smooth and simple. Our ultimate goal is financial freedom for all registered members. 
-              By providing easy tools for saving money, tracking historical performance, and managing small business 
-              credit, we are steadily building a strong foundation where everyone survives financial emergencies 
-              and grows wealthy together.
-            </p>
+        {/* Numbered list */}
+        {content.list && (
+          <ol className="ohc-modal-list">
+            {content.list.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
+          </ol>
+        )}
+
+        {/* Values */}
+        {content.values && (
+          <div className="ohc-modal-values">
+            {content.values.map((v) => (
+              <div key={v.name} className="ohc-modal-value-row">
+                <span className="ohc-modal-value-icon">{v.icon}</span>
+                <div>
+                  <strong>{v.name}</strong>
+                  <p>{v.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
+        )}
 
-          {/* EXTENDED PLATFORM RULES CARD */}
-          <div className="about-card text-left-card" id="rules">
-            <h3>Strict Platform Rules</h3>
-            <p className="card-sub-intro">
-              To keep our community completely clean and protect everyone from fraud, we follow a very strict set of 
-              internal operating procedures:
-            </p>
-            <ul>
-              <li>
-                <strong>Admin Creation Control:</strong> Regular people cannot join or create profiles on their own. 
-                Only a verified system admin can add a new user account into the master directory database.
-              </li>
-              <li>
-                <strong>Manual Approval Process:</strong> Every profile remains completely locked until an official admin 
-                checks the physical registration details and manually moves the user to verified status.
-              </li>
-              <li>
-                <strong>Protected Balance Changes:</strong> Members cannot randomly type or change their balance amounts. 
-                Only an admin can update your wallet logs after verifying your real bank money receipt.
-              </li>
-              <li>
-                <strong>Total Account Erasure:</strong> If a member chooses to leave the club entirely, only authorized 
-                administrators have the power to delete their data from the live platform.
-              </li>
-              <li>
-                <strong>Private Ledger Separation:</strong> Members can only view their own specific wallet info, personal 
-                saving progress, and private transaction ledger sheets. You can never see another user's balance.
-              </li>
-            </ul>
+        {/* Roles */}
+        {content.roles && (
+          <div className="ohc-modal-roles">
+            {content.roles.map((r) => (
+              <div key={r.name} className="ohc-modal-role-row">
+                <span className="ohc-modal-role-name">{r.name}</span>
+                <p className="ohc-modal-role-duty">{r.duty}</p>
+              </div>
+            ))}
           </div>
-
-          {/* EXTENDED CORE VALUES CARD */}
-          <div className="about-card text-left-card">
-            <h3>Our Core Values</h3>
-            <p className="card-sub-intro">
-              Everything we do inside the Olofin Heritage Club is guided by three basic pillars that protect our 
-              collective financial strength:
-            </p>
-            <ul>
-              <li>
-                <strong>Absolute Honesty:</strong> Every single naira that enters the club is immediately written down 
-                on an open ledger sheet. There are no hidden fees, no secret transactions, and zero guesswork.
-              </li>
-              <li>
-                <strong>Careful Auditing:</strong> Our admin teams run constant checks on our database inputs. We match 
-                every digital request against real-world bank statements to make sure things add up perfectly.
-              </li>
-              <li>
-                <strong>Total Family Unity:</strong> We treat all group members with the same respect. We share our financial 
-                rules clearly so that everyone knows exactly how their contributions are being handled at all times.
-              </li>
-            </ul>
-          </div>
-
-        </div>
-
-        {/* ROLE CAPABILITIES SECTION */}
-        <div className="role-section">
-          <h2>Clear System Capabilities</h2>
-          <p className="role-section-subtitle">
-            Here is a long, detailed breakdown of exactly what each account type is allowed to do inside the 
-            Olofin Heritage Club platform:
-          </p>
-
-          <div className="role-grid">
-
-            {/* FULL ADMIN OPERATIONS */}
-            <div className="role-card">
-              <div className="role-title">ADMINISTRATOR FUNCTIONS</div>
-              <ul>
-                <li>
-                  <strong>Member Directory Control:</strong> They have the absolute power to manually add new members to the portal 
-                  or delete profiles if someone breaks club rules.
-                </li>
-                <li>
-                  <strong>Verification Pipeline Audit:</strong> They review pending applications, crosscheck submitted club fees, 
-                  and unlock member accounts safely.
-                </li>
-                <li>
-                  <strong>Wallet Override Adjustments:</strong> They manually update user wallet balances after checking real 
-                  bank transaction receipts or cash contributions.
-                </li>
-                <li>
-                  <strong>Master Database Access:</strong> They can see all system users, examine group histories, and track 
-                  overall platform metrics on a master screen.
-                </li>
-                <li>
-                  <strong>Credit and Loan Management:</strong> They look at user loan requests, check background records, and 
-                  manually approve or decline payout funds.
-                </li>
-                <li>
-                  <strong>Global Broadcast Notices:</strong> They can send out mass messages and announcements to all members' 
-                  user dashboards instantly.
-                </li>
-              </ul>
-            </div>
-
-            {/* FULL USER OPERATIONS */}
-            <div className="role-card">
-              <div className="role-title">CLUB MEMBER FUNCTIONS</div>
-              <ul>
-                <li>
-                  <strong>Personal Wallet Tracking:</strong> You can view your current total contribution balances, paid dues, 
-                  and total active savings milestones at any time.
-                </li>
-                <li>
-                  <strong>Private Statement Downloads:</strong> You can scroll through a clean history list showing every single 
-                  deposit or loan transaction you have ever made.
-                </li>
-                <li>
-                  <strong>Notice Board Access:</strong> You can read all active news, dynamic changes, updates, and instructions 
-                  posted by the management team.
-                </li>
-                <li>
-                  <strong>Community Chat Hub:</strong> You can securely chat, interact, and plan club activities with other 
-                  registered members inside the closed portal.
-                </li>
-                <li>
-                  <strong>Secure Profile Insulation:</strong> Your data is completely locked down. You have access *only* to your 
-                  own wallet, keeping your financial information hidden from other members.
-                </li>
-              </ul>
-            </div>
-
-          </div>
-        </div>
-
+        )}
       </div>
+    </div>
+  );
+}
+
+function About() {
+  const [activeCard, setActiveCard] = useState(null);
+
+  return (
+    <section id="about" className="ohc-about">
+      {/* Section header */}
+      <div className="ohc-about-header">
+        <span className="ohc-about-eyebrow">About Olofin Heritage Club</span>
+        <h2 className="ohc-about-title">Built on Trust, Guided by a Constitution</h2>
+        <p className="ohc-about-lead">
+          A registered Nigerian savings club where members pool resources, support each
+          other, and grow wealth together — governed by a clear constitution since 2022.
+          Tap any card to read the full details.
+        </p>
+      </div>
+
+      {/* Clickable cards grid */}
+      <div className="ohc-about-grid">
+        {ABOUT_CARDS.map((card) => (
+          <button
+            key={card.id}
+            className="ohc-about-card"
+            onClick={() => setActiveCard(card)}
+            aria-label={`Read more about ${card.title}`}
+          >
+            <span className="ohc-about-card-icon">{card.icon}</span>
+            <h3 className="ohc-about-card-title">{card.title}</h3>
+            <p className="ohc-about-card-summary">{card.summary}</p>
+            <span className="ohc-about-card-cta">Read more →</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Modal */}
+      <Modal card={activeCard} onClose={() => setActiveCard(null)} />
     </section>
   );
 }

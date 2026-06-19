@@ -1,243 +1,459 @@
-/* ==========================================================================
-   🌐 DESKTOP CORE FIXED NAVBAR STYLING
-   ========================================================================== */
-.navbar {
-  position: fixed;
+/* ============================================================
+   OHC NAVBAR — redesigned
+   Design: frosted left-border brand mark, pill nav links,
+   cyan accent on a deep navy base, slide-in mobile drawer
+   ============================================================ */
+
+/* ---------- Base ---------- */
+.ohc-nav {
+  position: sticky;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 90px;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 60px;
-  z-index: 1000;
-  background: rgba(2, 17, 31, 0.95);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  gap: 16px;
+  padding: 0 32px;
+  height: 72px;
+  background: #020a16;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.18);
 }
 
-/* BRAND LOGO CONTEXT MAPS */
-.nav-logo {
+/* ---------- Brand ---------- */
+.ohc-brand {
   display: flex;
   align-items: center;
   gap: 12px;
   text-decoration: none;
+  flex-shrink: 0;
 }
 
-.nav-logo img {
-  width: 150px; /* Normalized clean dimensions */
-  height: auto;
+.ohc-brand-accent {
+  width: 3px;
+  height: 36px;
+  background: linear-gradient(to bottom, #22d3ee, #0891b2);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.ohc-brand-img {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
+  border: 1.5px solid rgba(34, 211, 238, 0.5);
 }
 
-.logo-text h2 {
-  font-size: 18px;
+.ohc-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ohc-brand-name {
+  color: #ffffff;
+  font-size: 15px;
   font-weight: 700;
-  color: white;
-  margin: 0;
-  line-height: 1.2;
+  letter-spacing: 0.02em;
+  line-height: 1;
 }
 
-.logo-text h2::first-letter {
-  color: #22d3ee;
+.ohc-brand-sub {
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.logo-text span {
-  font-size: 13px;
-  color: #cfd8dc;
-  letter-spacing: 1px;
-}
-
-/* UNIFIED CONTAINER STRUCTURAL FLOW */
-.nav-menu-wrapper {
+/* ---------- Desktop nav links ---------- */
+.ohc-links {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-grow: 1;
-  margin-left: 50px;
+  gap: 2px;
+  flex: 1;
+  justify-content: center;
 }
 
-/* LINK ELEMENT TARGET BUTTONS */
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 35px;
-}
-
-.nav-links button {
+.ohc-link {
   background: none;
   border: none;
-  cursor: pointer;
-  color: white;
-  font-size: 15px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 13px;
   font-weight: 600;
-  padding: 10px 0;
-  position: relative;
-  transition: 0.3s ease;
-}
-
-.nav-links button:hover {
-  color: #22d3ee;
-}
-
-.nav-links button::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 0%;
-  height: 2px;
-  background: #22d3ee;
-  transition: 0.3s;
-}
-
-.nav-links button:hover::after {
-  width: 100%;
-}
-
-/* ACTION CONTROLS BUTTON MATRIX */
-.nav-buttons {
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: 999px;
+  transition: color 0.15s, background 0.15s;
   display: flex;
-  gap: 15px;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  font-family: inherit;
 }
 
-.signup-btn,
-.login-btn {
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 12px 24px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  transition: 0.3s ease;
-}
-
-.signup-btn {
-  background: transparent;
-  border: 1px solid #22d3ee;
+.ohc-link:hover,
+.ohc-drop-wrap.is-open .ohc-link--drop {
   color: #22d3ee;
+  background: rgba(34, 211, 238, 0.1);
 }
 
-.signup-btn:hover {
+.ohc-chevron {
+  opacity: 0.5;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.ohc-drop-wrap.is-open .ohc-chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* ---------- Dropdown panel ---------- */
+.ohc-drop-wrap {
+  position: relative;
+}
+
+.ohc-drop {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 268px;
+  background: #050f20;
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  border-radius: 14px;
+  padding: 10px 6px;
+  z-index: 2000;
+  animation: ohcFadeDown 0.14s ease;
+}
+
+@keyframes ohcFadeDown {
+  from { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.ohc-drop-heading {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #22d3ee;
+  font-weight: 700;
+  padding: 4px 12px 8px;
+  margin: 0;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.12);
+  margin-bottom: 4px;
+}
+
+.ohc-drop-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  text-align: left;
+  transition: background 0.13s;
+  font-family: inherit;
+}
+
+.ohc-drop-item:hover {
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.ohc-drop-label {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ohc-drop-desc {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+/* ---------- Right side CTA + hamburger ---------- */
+.ohc-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.ohc-ctas {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Ghost button */
+.ohc-btn-ghost {
+  background: none;
+  border: 1.5px solid rgba(34, 211, 238, 0.45);
+  color: #22d3ee;
+  padding: 7px 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.ohc-btn-ghost:hover {
+  background: rgba(34, 211, 238, 0.1);
+  border-color: #22d3ee;
+}
+
+/* Solid button */
+.ohc-btn-solid {
   background: #22d3ee;
-  color: black;
+  border: none;
+  color: #020a16;
+  padding: 7px 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
 }
 
-.login-btn {
-  background: linear-gradient(135deg, #06b6d4, #2563eb);
-  color: white;
+.ohc-btn-solid:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
 }
 
-.login-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
-}
-
-/* ==========================================================================
-   🍔 RESPONSIVE HAMBURGER ELEMENT MARKERS
-   ========================================================================== */
-.hamburger-toggle-menu {
+/* ---------- Hamburger ---------- */
+.ohc-hamburger {
   display: none;
   flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 21px;
-  background: transparent;
-  border: none;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: rgba(34, 211, 238, 0.08);
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  border-radius: 8px;
   cursor: pointer;
-  padding: 0;
-  z-index: 1001;
+  padding: 8px;
+  flex-shrink: 0;
 }
 
-.hamburger-toggle-menu .bar {
+.ohc-bar {
+  display: block;
   width: 100%;
-  height: 3px;
-  background-color: white;
-  border-radius: 10px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  height: 2px;
+  background: #22d3ee;
+  border-radius: 2px;
+  transition: transform 0.22s, opacity 0.22s;
 }
 
-/* Animated Transforms when Mobile Open Drawer Flag Active */
-.hamburger-toggle-menu.active .bar:nth-child(1) {
-  transform: translateY(9px) rotate(45deg);
-  background-color: #22d3ee;
+.ohc-hamburger.is-open .ohc-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
 }
-
-.hamburger-toggle-menu.active .bar:nth-child(2) {
+.ohc-hamburger.is-open .ohc-bar:nth-child(2) {
   opacity: 0;
 }
-
-.hamburger-toggle-menu.active .bar:nth-child(3) {
-  transform: translateY(-9px) rotate(-45deg);
-  background-color: #22d3ee;
+.ohc-hamburger.is-open .ohc-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ==========================================================================
-   📱 MEDIA QUERIES BREAKPOINTS (TABLETS & PHONE DRAWER MODE)
-   ========================================================================== */
-@media screen and (max-width: 915px) {
-  
-.nav-logo img {
-  width: 120px; 
+/* ============================================================
+   MOBILE DRAWER — portal rendered, full viewport below navbar
+   ============================================================ */
+.ohc-drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  background: #020a16;
+  border-top: 1px solid rgba(34, 211, 238, 0.2);
+  z-index: 999;
+  padding: 8px 0 48px;
+  animation: ohcSlideIn 0.22s ease;
 }
-  .navbar {
-    padding: 0 25px;
+
+@keyframes ohcSlideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ohc-drawer-home {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 16px 24px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.ohc-drawer-home:hover {
+  color: #22d3ee;
+}
+
+.ohc-drawer-section {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ohc-drawer-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 16px 24px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.ohc-drawer-trigger:hover,
+.ohc-drawer-trigger.is-open {
+  color: #22d3ee;
+}
+
+.ohc-drawer-chevron {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+  opacity: 0.5;
+}
+
+.ohc-drawer-trigger.is-open .ohc-drawer-chevron {
+  transform: rotate(180deg);
+  opacity: 1;
+  stroke: #22d3ee;
+}
+
+.ohc-drawer-body {
+  padding: 4px 12px 12px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: ohcFadeDown 0.14s ease;
+}
+
+.ohc-drawer-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 10px 12px;
+  text-align: left;
+  transition: background 0.13s;
+  font-family: inherit;
+}
+
+.ohc-drawer-sub:hover {
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.ohc-drawer-sub-label {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ohc-drawer-sub-desc {
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+.ohc-drawer-actions {
+  display: flex;
+  gap: 12px;
+  padding: 24px 24px 0;
+}
+
+.ohc-drawer-actions .ohc-btn-ghost,
+.ohc-drawer-actions .ohc-btn-solid {
+  flex: 1;
+  text-align: center;
+  /* padding: 15px 2px; */
+  font-size: 13px;
+}
+
+/* ============================================================
+   RESPONSIVE BREAKPOINTS
+   ============================================================ */
+
+/* Tablet: hide middle text of brand, shrink padding */
+@media (max-width: 1024px) {
+  .ohc-nav {
+    padding: 0 24px;
+  }
+}
+
+/* Mobile: hide desktop nav and CTAs, show hamburger */
+@media (max-width: 768px) {
+  .ohc-nav {
+    padding: 0 18px;
+    height: 64px;
   }
 
-  .hamburger-toggle-menu {
-    display: flex; /* Show menu toggle button lines */
+  .ohc-links {
+    display: none;
   }
 
-  /* Converts wrapper block layout into dynamic slide out absolute side drawer panel */
-  .nav-menu-wrapper {
-    position: fixed;
-    top: 0;
-    right: -100%; /* Hidden completely off-screen by default default */
-    width: 280px;
-    height: 100vh;
-    background: rgba(3, 24, 43, 0.98);
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    padding: 120px 30px 40px 30px;
-    gap: 50px;
-    margin-left: 0;
-    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  .ohc-ctas {
+    display: none;
   }
 
-  .nav-menu-wrapper.open {
-    right: 0; /* Slide-in overlay on layout tree trigger activation */
+  .ohc-hamburger {
+    display: flex;
   }
 
-  .nav-links {
-    flex-direction: column;
-    width: 100%;
-    gap: 25px;
+  .ohc-brand-sub {
+    display: none;
   }
 
-  .nav-links button {
-    font-size: 18px;
-    width: 100%;
-    text-align: center;
-    padding: 15px 0;
+  .ohc-brand-name {
+    font-size: 14px;
   }
 
-  .nav-buttons {
-    flex-direction: column;
-    width: 100%;
-    gap: 20px;
+  .ohc-brand-img {
+    width: 47px;
+    height: 42px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+  .ohc-nav {
+    padding: 0 14px;
   }
 
-  .signup-btn,
-  .login-btn {
-    width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    text-align: center;
+  .ohc-brand-accent {
+    display: none;
   }
 }
