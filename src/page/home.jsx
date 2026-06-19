@@ -5,7 +5,7 @@ import React from "react";
 import Hero from "../component/Hero.jsx/Hero";
 import About from "../component/About/About";
 import "./home.css";
-import Navbar from "../component/Navbar/Navbar";
+import Navbar from "../component/nav/Navbar";
 
 function Home() {
   return (
