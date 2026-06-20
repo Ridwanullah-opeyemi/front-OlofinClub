@@ -13,6 +13,7 @@ function MemberDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [loggingOut, setLoggingOut] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const token = localStorage.getItem("token");
@@ -131,7 +132,7 @@ function MemberDashboard() {
           {loggingOut ? "Ending Session..." : "🚪 Secure Logout"}
         </button>
       </aside>
-
+        
       {/* Main View Container */}
       <main className="main-content-area">{renderContent()}</main>
     </div>

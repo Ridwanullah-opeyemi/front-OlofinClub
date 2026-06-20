@@ -1,172 +1,412 @@
-.ledger-container h2 {
-  margin-top: 0;
-  color: #2c3e50;
-}
+/* ============================================================
+   TRANSACTION HISTORY -- bank statement style
+   ============================================================ */
 
-.ledger-subtitle {
-  color: #7f8c8d;
-  margin-bottom: 25px;
-  font-size: 15px;
-}
-
-.table-card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  overflow: hidden;
-}
-
-/* 📱 Responsive horizontal-scrolling table barrier engine */
-.table-responsive-wrapper {
+.txn-page {
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Forces fluid momentum swipe response on modern mobile browsers */
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
 }
 
-.empty-ledger-text {
-  padding: 30px;
-  color: #7f8c8d;
-  text-align: center;
+.txn-header {
+  margin-bottom: 24px;
 }
 
-.ledger-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.ledger-table th {
-  background: #eaeded;
-  color: #34495e;
-  padding: 15px;
-  font-weight: 600;
-  white-space: nowrap; /* Forces key desktop headers to sit flat safely */
-}
-
-.ledger-table td {
-  padding: 15px;
-  border-bottom: 1px solid #f2f4f4;
-  white-space: nowrap; /* Guarantees financial currencies don't experience vertical splitting text disruptions */
-}
-
-.date-cell {
-  color: #7f8c8d;
-}
-
-.desc-cell {
-  font-weight: 500;
-  color: #2c3e50;
-  white-space: normal !important; /* Overrides global constraints so long descriptions can safely break over lines */
-  min-width: 220px; /* Locks open spatial grid footprint parameters */
-}
-
-.amount-cell {
-  font-weight: bold;
-}
-
-.amount-cell.positive {
-  color: #27ae60;
-}
-
-.amount-cell.negative {
-  color: #c0392b;
-}
-
-.final-balance-cell {
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-/* Color indicators for money transactions */
-.amount-cell.positive {
-  color: #2ecc71 !important;
-  font-weight: bold;
-}
-
-.amount-cell.negative {
-  color: #e74c3c !important;
-  font-weight: bold;
-}
-
-/* Enhances alignment across systems */
-.ledger-table th {
-  text-align: left;
-  padding: 14px;
-  font-size: 13px;
-  background-color: #f8fafc;
-  color: #475569;
-}
-
-.ledger-table td {
-  padding: 14px;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
-}
-
-/* Unified Bank App Badge Matrix styling rules */
-.bank-event-badge {
-  display: inline-block;
-  padding: 4px 8px;
-  font-size: 11px;
+.txn-header h2 {
+  color: #0f172a;
+  font-size: 24px;
   font-weight: 700;
-  border-radius: 4px;
+  margin: 0 0 6px;
+}
+
+.txn-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+.txn-statement-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.txn-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 64px 24px;
   text-align: center;
-  letter-spacing: 0.3px;
 }
 
-.badge-deposit {
-  background-color: #e8f8f5;
-  color: #1abc9c;
+.txn-empty-state p {
+  color: #334155;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 4px 0 0;
 }
 
-.badge-withdraw {
-  background-color: #fce4d6;
-  color: #d35400;
+.txn-empty-icon {
+  font-size: 36px;
 }
 
-.badge-loan-in {
-  background-color: #ebf5fb;
-  color: #2980b9;
+.txn-empty-sub {
+  color: #94a3b8;
+  font-size: 13px;
 }
 
-.badge-loan-out {
-  background-color: #f5eef8;
-  color: #8e44ad;
+.txn-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #0891b2;
+  border-radius: 50%;
+  animation: txnSpin 0.7s linear infinite;
 }
 
-.badge-bonus {
-  background-color: #feefc3;
-  color: #b06000;
+@keyframes txnSpin {
+  to { transform: rotate(360deg); }
 }
 
-.badge-generic {
-  background-color: #f1f5f9;
+.txn-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.txn-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto 16px;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 16px 20px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.12s;
+}
+
+.txn-row:last-child {
+  border-bottom: none;
+}
+
+.txn-row:hover {
+  background: #f8fafc;
+}
+
+.txn-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.txn-icon.credit {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.txn-icon.debit {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.txn-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.txn-name {
+  color: #0f172a;
+  font-size: 14.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.txn-desc {
+  color: #94a3b8;
+  font-size: 12.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.txn-when {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.txn-date {
   color: #475569;
+  font-size: 12.5px;
+  font-weight: 500;
 }
 
-/* ==========================================================================
-   📱 MOBILE & TABLET DATA COMPRESSION QUERY BREAKPOINT
-   ========================================================================== */
-@media screen and (max-width: 768px) {
-  .ledger-container h2 {
+.txn-time {
+  color: #cbd5e1;
+  font-size: 11.5px;
+}
+
+.txn-amount-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+  min-width: 110px;
+}
+
+.txn-amount {
+  font-size: 14.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.txn-amount.credit {
+  color: #059669;
+}
+
+.txn-amount.debit {
+  color: #dc2626;
+}
+
+.txn-balance {
+  color: #94a3b8;
+  font-size: 11.5px;
+  white-space: nowrap;
+}
+
+.txn-chevron {
+  color: #cbd5e1;
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.txn-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: txnFadeIn 0.15s ease;
+}
+
+@keyframes txnFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.txn-modal-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  max-width: 380px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  animation: txnModalIn 0.18s ease;
+}
+
+@keyframes txnModalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.txn-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  color: #64748b;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+}
+
+.txn-modal-close:hover {
+  background: #e2e8f0;
+}
+
+.txn-modal-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.txn-modal-icon.credit {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.txn-modal-icon.debit {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.txn-modal-label {
+  color: #94a3b8;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.txn-modal-amount {
+  font-size: 30px;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.txn-modal-amount.credit {
+  color: #059669;
+}
+
+.txn-modal-amount.debit {
+  color: #dc2626;
+}
+
+.txn-modal-divider {
+  width: 100%;
+  height: 1px;
+  background: #f1f5f9;
+  margin-bottom: 18px;
+}
+
+.txn-modal-details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  margin-bottom: 24px;
+}
+
+.txn-modal-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.txn-modal-detail-row span {
+  color: #94a3b8;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.txn-modal-detail-row strong {
+  color: #0f172a;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.txn-modal-done {
+  width: 100%;
+  background: #0f172a;
+  border: none;
+  color: #fff;
+  padding: 13px 0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+
+.txn-modal-done:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 720px) {
+  .txn-row {
+    grid-template-columns: 36px 1fr auto 14px;
+    gap: 10px;
+    padding: 14px 14px;
+  }
+
+  .txn-when {
+    display: none;
+  }
+
+  .txn-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+  }
+
+  .txn-name {
+    font-size: 13.5px;
+  }
+
+  .txn-desc {
+    font-size: 11.5px;
+  }
+
+  .txn-amount {
+    font-size: 13.5px;
+  }
+
+  .txn-amount-col {
+    min-width: auto;
+  }
+
+  .txn-header h2 {
     font-size: 20px;
-    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 420px) {
+  .txn-page {
+    padding: 20px 12px 48px;
   }
 
-  .ledger-subtitle {
-    font-size: 13px;
-    margin-bottom: 15px;
-    line-height: 1.4;
+  .txn-modal-card {
+    padding: 26px 20px 22px;
   }
 
-  /* Compress padding constraints to leverage view area space metrics */
-  .ledger-table th, 
-  .ledger-table td {
-    padding: 12px 10px;
-    font-size: 13px;
-  }
-
-  .date-cell {
-    font-size: 12px;
+  .txn-modal-amount {
+    font-size: 26px;
   }
 }

@@ -1,187 +1,422 @@
-/* --- 📥 APPROVAL HUB HEADERS & CONTAINER LAYOUT --- */
-.approvals-container h2 {
-  color: #2c3e50;
-  margin-top: 0;
+/* ============================================================
+   PENDING DEPOSITS -- bank-style review queue
+   ============================================================ */
+
+.appr-page {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
 }
 
-.subtitle {
-  color: #7f8c8d;
-  margin-bottom: 30px;
+.appr-header {
+  margin-bottom: 24px;
 }
 
-.approvals-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 25px;
+.appr-header h2 {
+  color: #0f172a;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 6px;
 }
 
-.approval-card {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  padding: 20px;
+.appr-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+.appr-loading,
+.appr-error {
+  max-width: 760px;
+  margin: 60px auto;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+  padding: 0 20px;
+}
+
+.appr-error {
+  color: #dc2626;
+}
+
+/* ---------- Empty state ---------- */
+.appr-empty-state {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  border-left: 4px solid #f39c12;
-}
-
-.card-info p {
-  margin: 6px 0;
-  color: #2c3e50;
-}
-
-.amt {
-  color: #2ecc71;
-  font-weight: bold;
-}
-
-.status-badge {
-  background: #fef9e7;
-  color: #f39c12;
-  padding: 2px 8px;
-  font-size: 12px;
-  font-weight: bold;
-  border-radius: 3px;
-  text-transform: uppercase;
-}
-
-/* --- 🖼️ RECEIPT AUDITING COMPONENTS --- */
-.receipt-tag {
-  font-size: 13px;
-  color: #7f8c8d;
-  margin: 0 0 5px 0;
-  font-weight: 700;
-}
-
-.receipt-image-frame {
-  width: 100%;
-  max-height: 320px;
-  overflow-y: auto;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  background: #f1f5f9;
-  display: flex;
-  justify-content: center;
-}
-
-.receipt-img {
-  width: 100%;
-  max-height: 180px;
-  object-fit: contain;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: #fafafa;
-}
-
-.audit-modal .receipt-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-.audit-meta-summary {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  background: #f8fafc;
-  padding: 14px;
-  border-radius: 8px;
-}
-
-.audit-meta-summary p {
-  margin: 0;
-  font-size: 13px;
-}
-
-/* --- 👥 MEMBERS OVERVIEW EXTRAS --- */
-.overview-header-actions {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 64px 24px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.appr-empty-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ecfdf5;
+  color: #059669;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.appr-empty-state p {
+  color: #334155;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.appr-empty-sub {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+/* ---------- List ---------- */
+.appr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.appr-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.appr-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #0891b2;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.appr-avatar.large {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+}
+
+.appr-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.appr-name {
+  color: #0f172a;
+  font-size: 14.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.appr-status-pill {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  background: #fffbeb;
+  color: #b45309;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.appr-amount {
+  color: #0f172a;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.appr-view-btn {
+  background: #0f172a;
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+
+.appr-view-btn:hover {
+  opacity: 0.85;
+}
+
+/* ============================================================
+   REVIEW MODAL
+   ============================================================ */
+
+.appr-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: apprFadeIn 0.15s ease;
+}
+
+@keyframes apprFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.appr-modal-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 24px 24px 26px;
+  max-width: 420px;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  animation: apprModalIn 0.18s ease;
+}
+
+@keyframes apprModalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.appr-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.appr-modal-header h4 {
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.appr-modal-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  color: #64748b;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+}
+
+.appr-modal-close:hover {
+  background: #e2e8f0;
+}
+
+.appr-modal-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  background: #f8fafc;
+  border-radius: 14px;
   margin-bottom: 20px;
 }
 
-.overview-header-actions h3 {
-  margin: 0;
+.appr-modal-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.appr-modal-name {
   color: #0f172a;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.overview-subtitle {
-  margin: 4px 0 0 0;
-  color: #64748b;
   font-size: 14px;
-}
-
-.user-bold {
-  font-weight: 700;
-}
-
-.role-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.admin-tier { background-color: #fee2e2; color: #ef4444; }
-.user-tier { background-color: #f1f5f9; color: #475569; }
-
-/* --- 🛑 APP SYSTEM STAT NOTICES --- */
-.loading-notice, .error-notice, .empty-text {
-  font-weight: bold;
-  padding: 20px;
-}
-.loading-notice { color: #2c3e50; }
-.error-notice { color: #c0392b; }
-.empty-text { grid-column: 1 / -1; padding: 40px; color: #64748b; text-align: center; font-weight: 500; }
-
-/* --- 🕹️ BUTTON INTERACTIONS --- */
-.create-member-btn {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  background-color: #2980b9;
   font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
-.view-receipt-btn {
+.appr-modal-amount {
+  color: #059669;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* Receipt block */
+.appr-receipt-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.appr-receipt-label {
+  color: #64748b;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.appr-receipt-frame {
+  position: relative;
   width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 6px;
-  background-color: #2980b9;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.approve-action-btn, .create-member-submit-btn {
-  background: #2ecc71;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
+  min-height: 200px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
 }
 
-.approve-action-btn:hover { background: #27ae60; }
-.create-member-submit-btn { background-color: #2980b9; font-size: 14px; border-radius: 6px; padding: 10px 18px; }
-.create-member-submit-btn:hover { background-color: #2471a3; }
+.appr-receipt-img {
+  width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+  display: block;
+}
 
-.approve-action-btn:disabled, .create-member-submit-btn:disabled {
-  background-color: #94a3b8;
+.appr-receipt-skeleton {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
+  background-size: 400% 100%;
+  animation: apprShimmer 1.4s ease infinite;
+}
+
+@keyframes apprShimmer {
+  0%   { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+.appr-receipt-fullsize-link {
+  color: #0891b2;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+.appr-receipt-fullsize-link:hover {
+  text-decoration: underline;
+}
+
+/* Action buttons */
+.appr-modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.appr-btn-cancel {
+  flex: 1;
+  background: #f1f5f9;
+  border: none;
+  color: #475569;
+  padding: 13px 0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.appr-btn-cancel:hover {
+  background: #e2e8f0;
+}
+
+.appr-btn-cancel:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+.appr-btn-approve {
+  flex: 1.4;
+  background: #059669;
+  border: none;
+  color: #fff;
+  padding: 13px 0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+
+.appr-btn-approve:hover {
+  opacity: 0.88;
+}
+
+.appr-btn-approve:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .appr-row {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .appr-amount {
+    order: 3;
+    margin-left: 54px;
+  }
+
+  .appr-view-btn {
+    order: 4;
+    margin-left: auto;
+  }
+
+  .appr-modal-card {
+    padding: 20px 18px 22px;
+    border-radius: 18px;
+  }
+
+  .appr-modal-summary {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 420px) {
+  .appr-page {
+    padding: 20px 12px 48px;
+  }
+
+  .appr-header h2 {
+    font-size: 20px;
+  }
 }

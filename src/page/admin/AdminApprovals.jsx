@@ -8,6 +8,7 @@ function AdminApprovals({ triggerPopup }) {
 
   const [selectedAudit, setSelectedAudit] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
 
   const token = localStorage.getItem("token");
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -16,24 +17,16 @@ function AdminApprovals({ triggerPopup }) {
     try {
       setLoading(true);
 
-      const res = await fetch(
-        `${backendUrl}/api/auth/deposits/pending`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${backendUrl}/api/auth/deposits/pending`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const data = await res.json();
 
       if (res.ok) {
         setRequests(data.data || []);
       } else {
-        throw new Error(
-          data.message ||
-            "Failed to load verification queue."
-        );
+        throw new Error(data.message || "Could not load pending deposits.");
       }
     } catch (err) {
       setError(err.message);
@@ -46,217 +39,156 @@ function AdminApprovals({ triggerPopup }) {
     fetchPendingRequests();
   }, []);
 
+  const openReceipt = (r) => {
+    setImageLoading(true);
+    setSelectedAudit(r);
+  };
+
   const handleApprove = async (id) => {
     if (submitting) return;
-
     setSubmitting(true);
 
     try {
-      const res = await fetch(
-        `${backendUrl}/api/auth/deposits/${id}/approve`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${backendUrl}/api/auth/deposits/${id}/approve`, {
+        method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const data = await res.json();
 
       if (res.ok && data.success) {
-        triggerPopup(
-          "Deposit transaction verified successfully!",
-          "success"
-        );
-
-        // Close modal immediately
+        triggerPopup("Deposit approved and balance updated.", "success");
         setSelectedAudit(null);
-
-        // Remove instantly from UI
-        setRequests((prev) =>
-          prev.filter(
-            (r) =>
-              String(r.id || r._id) !== String(id)
-          )
-        );
-
-        // Re-sync with backend after approval
-        setTimeout(() => {
-          fetchPendingRequests();
-        }, 500);
+        setRequests((prev) => prev.filter((r) => String(r.id || r._id) !== String(id)));
+        setTimeout(() => fetchPendingRequests(), 500);
       } else {
-        triggerPopup(
-          data.message ||
-            "Approval tracking update failed.",
-          "error"
-        );
+        triggerPopup(data.message || "Could not approve this deposit.", "error");
       }
     } catch (err) {
       console.error("Approval error:", err);
-
-      triggerPopup(
-        "Network communication error with backend processing.",
-        "error"
-      );
+      triggerPopup("Connection issue — please try again.", "error");
     } finally {
       setSubmitting(false);
     }
   };
 
   if (loading) {
-    return (
-      <div className="loading-notice">
-        Loading pending audits queue...
-      </div>
-    );
+    return <div className="appr-loading">Loading deposit requests…</div>;
   }
 
   if (error) {
-    return (
-      <div className="error-notice">
-        Error: {error}
-      </div>
-    );
+    return <div className="appr-error">Something went wrong: {error}</div>;
   }
 
   return (
-    <div className="approvals-container">
-      <h2>Incoming Deposit Verification Queue</h2>
-
-      <p className="subtitle">
-        Audit payment receipts uploaded by members
-        and verify balances dynamically.
-      </p>
-
-      <div className="approvals-grid">
-        {requests.length === 0 ? (
-          <p className="empty-text">
-            🎉 Excellent! No pending deposit
-            validation requests waiting inside your
-            queue.
-          </p>
-        ) : (
-          requests.map((r) => (
-            <div
-              key={r.id || r._id}
-              className="approval-card"
-            >
-              <div className="card-info">
-                <p>
-                  <strong>Member Name:</strong>{" "}
-                  {r.username}
-                </p>
-
-                <p>
-                  <strong>Stated Value Sent:</strong>{" "}
-                  <span className="amt">
-                    ₦
-                    {Number(
-                      r.amount
-                    ).toLocaleString()}
-                  </span>
-                </p>
-
-                <p>
-                  <strong>Status:</strong>{" "}
-                  <span className="status-badge">
-                    {r.status}
-                  </span>
-                </p>
-              </div>
-
-              <div className="card-actions">
-                <button
-                  type="button"
-                  onClick={() => setSelectedAudit(r)}
-                  className="view-receipt-btn"
-                >
-                  🔍 View Uploaded Receipt
-                </button>
-              </div>
-            </div>
-          ))
-        )}
+    <div className="appr-page">
+      <div className="appr-header">
+        <h2>Pending Deposits</h2>
+        <p className="appr-subtitle">
+          Review the payment proof each member uploaded, then approve to credit their balance.
+        </p>
       </div>
 
-      {selectedAudit && (
-        <div className="admin-modal-overlay">
-          <div className="admin-modal-card audit-modal">
-            <div className="modal-header-row">
-              <h4>
-                📋 Audit Payment Validation Receipt
-              </h4>
+      {requests.length === 0 ? (
+        <div className="appr-empty-state">
+          <span className="appr-empty-icon">✓</span>
+          <p>All caught up</p>
+          <span className="appr-empty-sub">No deposits are waiting for review right now.</span>
+        </div>
+      ) : (
+        <div className="appr-list">
+          {requests.map((r) => (
+            <div key={r.id || r._id} className="appr-row">
+              <div className="appr-avatar">
+                {(r.username || "?").charAt(0).toUpperCase()}
+              </div>
 
+              <div className="appr-main">
+                <span className="appr-name">{r.username}</span>
+                <span className="appr-status-pill">Awaiting review</span>
+              </div>
+
+              <span className="appr-amount">₦{Number(r.amount).toLocaleString()}</span>
+
+              <button type="button" className="appr-view-btn" onClick={() => openReceipt(r)}>
+                Review
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Deposit review panel — receipt image shown before approving */}
+      {selectedAudit && (
+        <div className="appr-modal-overlay" onClick={() => !submitting && setSelectedAudit(null)}>
+          <div className="appr-modal-card" onClick={(e) => e.stopPropagation()}>
+
+            <div className="appr-modal-header">
+              <h4>Deposit Review</h4>
               <button
                 type="button"
-                className="close-modal-x"
-                onClick={() =>
-                  !submitting &&
-                  setSelectedAudit(null)
-                }
+                className="appr-modal-close"
+                onClick={() => !submitting && setSelectedAudit(null)}
               >
                 ×
               </button>
             </div>
 
-            <div className="modal-form-stack">
-              <div className="audit-meta-summary">
-                <p>
-                  <strong>Member:</strong>{" "}
-                  {selectedAudit.username}
-                </p>
+            <div className="appr-modal-summary">
+              <div className="appr-avatar large">
+                {(selectedAudit.username || "?").charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <span className="appr-modal-name">{selectedAudit.username}</span>
+                <span className="appr-modal-amount">
+                  ₦{Number(selectedAudit.amount).toLocaleString()}
+                </span>
+              </div>
+            </div>
 
-                <p>
-                  <strong>Amount:</strong> ₦
-                  {Number(
-                    selectedAudit.amount
-                  ).toLocaleString()}
-                </p>
+            <div className="appr-receipt-block">
+              <span className="appr-receipt-label">Payment proof uploaded by member</span>
+
+              <div className="appr-receipt-frame">
+                {imageLoading && <div className="appr-receipt-skeleton" />}
+                <img
+                  src={selectedAudit.proof_url}
+                  alt="Payment receipt uploaded by member"
+                  className="appr-receipt-img"
+                  style={{ display: imageLoading ? "none" : "block" }}
+                  onLoad={() => setImageLoading(false)}
+                  onError={() => setImageLoading(false)}
+                />
               </div>
 
-              <div className="card-receipt">
-                <p className="receipt-tag">
-                  Submitted Receipt File:
-                </p>
+              <a
+                href={selectedAudit.proof_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="appr-receipt-fullsize-link"
+              >
+                Open full size in new tab
+              </a>
+            </div>
 
-                <div className="receipt-image-frame">
-                  <img
-                    src={selectedAudit.proof_url}
-                    alt="Receipt Proof File"
-                    className="receipt-img"
-                  />
-                </div>
-              </div>
+            <div className="appr-modal-actions">
+              <button
+                type="button"
+                className="appr-btn-cancel"
+                onClick={() => setSelectedAudit(null)}
+                disabled={submitting}
+              >
+                Close
+              </button>
 
-              <div className="modal-action-buttons">
-                <button
-                  type="button"
-                  className="modal-btn-cancel"
-                  onClick={() =>
-                    setSelectedAudit(null)
-                  }
-                  disabled={submitting}
-                >
-                  Close Review
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleApprove(
-                      selectedAudit.id ||
-                        selectedAudit._id
-                    )
-                  }
-                  className="approve-action-btn"
-                  disabled={submitting}
-                >
-                  {submitting
-                    ? "⏳ Verifying Ledger..."
-                    : "✅ Verify & Credit Balance"}
-                </button>
-              </div>
+              <button
+                type="button"
+                className="appr-btn-approve"
+                onClick={() => handleApprove(selectedAudit.id || selectedAudit._id)}
+                disabled={submitting}
+              >
+                {submitting ? "Approving…" : "Approve deposit"}
+              </button>
             </div>
           </div>
         </div>
