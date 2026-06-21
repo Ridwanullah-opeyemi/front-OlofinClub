@@ -10,6 +10,7 @@ import MembershipRequest from "./page/MembershipRequestForm";
 import MemberDashboard from "./page/MemberDashboard";
 import AdminDashboard from "./page/AdminDashboard";
 import ResetPassword from "./page/ResetPassword";
+import UploadDocument from "./page/UploadDocument";
 
 // 🛡️ Guard for Regular Users/Members
 const MemberRoute = ({ children }) => {
@@ -65,6 +66,16 @@ function App() {
           element={
             <AdminRoute>
               <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+
+        {/* 📤 PROTECTED ADMIN ROUTE — Google Drive document upload */}
+        <Route
+          path="/upload"
+          element={
+            <AdminRoute>
+              <UploadDocument />
             </AdminRoute>
           }
         />

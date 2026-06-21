@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/admin-chat.css";
 
 function AdminChat({ triggerPopup }) {
@@ -8,16 +8,21 @@ function AdminChat({ triggerPopup }) {
 
   const token = localStorage.getItem("token");
   const storedUser = JSON.parse(localStorage.getItem("user"));
-  const chatEndRef = useRef(null);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const fetchChatStream = async () => {
     try {
       const response = await fetch(`${backendUrl}/api/chat/messages`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
       const data = await response.json();
-      if (response.ok) setMessages(data.data || []);
+
+      if (response.ok) {
+        setMessages(data.data || []);
+      }
     } catch (err) {
       console.error("Chat fetch loop error:", err);
     }
@@ -25,24 +30,29 @@ function AdminChat({ triggerPopup }) {
 
   useEffect(() => {
     fetchChatStream();
-    const interval = setInterval(fetchChatStream, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    const interval = setInterval(fetchChatStream, 3000);
+
+    return () => clearInterval(interval);
+  }, [token, backendUrl]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
+
     if (!newMessage.trim()) return;
 
     setSending(true);
+
     try {
       const response = await fetch(`${backendUrl}/api/chat/message`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ message_text: newMessage }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message_text: newMessage,
+        }),
       });
 
       if (response.ok) {
@@ -50,57 +60,157 @@ function AdminChat({ triggerPopup }) {
         fetchChatStream();
       } else {
         const errorData = await response.json();
-        triggerPopup(errorData.message || "Failed to broadcast message.", "error");
+
+        triggerPopup(
+          errorData.message || "Failed to broadcast message.",
+          "error"
+        );
       }
     } catch (err) {
       console.error("Transmission breakdown:", err);
-      triggerPopup("Network error — message could not be sent.", "error");
+
+      triggerPopup(
+        "Network error — message could not be sent.",
+        "error"
+      );
     } finally {
       setSending(false);
     }
   };
 
+  const getInitials = (name = "") =>
+    name
+      .trim()
+      .split(" ")
+      .map((part) => part[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "?";
+
+  const formatMessageTime = (timestamp) => {
+    if (!timestamp) return "";
+
+    return new Date(timestamp).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const shouldGroupWithPrevious = (msg, prevMsg) => {
+    if (!prevMsg) return false;
+
+    return String(prevMsg.sender_id) === String(msg.sender_id);
+  };
+
   return (
     <div className="admin-chat-container">
-      <h2>📢 Management Operations Hub</h2>
-      <p className="chat-subtitle">Broadcast critical notices, field support questions, or chat with active users in real time.</p>
+      <div className="ov-chat-card">
+        <div className="ov-chat-header">
+          <div className="ov-chat-header-left">
+            <span className="ov-chat-live-dot" />
+            <h4>Management Operations Hub</h4>
+          </div>
 
-      <div className="chat-window-board">
-        <div className="chat-messages-stream">
+          <span className="ov-chat-member-count">
+            Live Broadcast
+          </span>
+        </div>
+
+        <div className="ov-chat-messages">
           {messages.length === 0 ? (
-            <div className="empty-stream-text">No message records active inside current chat logs.</div>
+            <div className="ov-chat-empty">
+              <span className="ov-chat-empty-icon">💬</span>
+
+              <p>No messages yet</p>
+
+              <span>
+                No active records inside current chat logs.
+              </span>
+            </div>
           ) : (
-            messages.map((msg) => {
-              const isMe = String(msg.sender_id) === String(storedUser?.id);
+            messages.map((msg, index) => {
+              const isMine =
+                String(msg.sender_id) === String(storedUser?.id);
+
+              const grouped = shouldGroupWithPrevious(
+                msg,
+                messages[index - 1]
+              );
+
               return (
-                <div key={msg.id} className={`message-bubble-wrapper ${isMe ? "is-admin-author" : "is-user-author"}`}>
-                  <div className="message-header-meta">
-                    <span className="author-name">{msg.sender_name}</span>
-                    {isMe && <span className="author-tag-badge">Admin</span>}
-                  </div>
-                  <div className="message-body-text">{msg.message_text}</div>
-                  <div className="message-timestamp-label">
-                    {new Date(msg.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                <div
+                  key={msg.id}
+                  className={`ov-msg-row ${
+                    isMine ? "mine" : "others"
+                  } ${grouped ? "grouped" : ""}`}
+                >
+                  {!isMine && (
+                    <div className="ov-msg-avatar">
+                      {grouped
+                        ? ""
+                        : getInitials(msg.sender_name)}
+                    </div>
+                  )}
+
+                  <div className="ov-msg-stack">
+                    {!grouped && !isMine && (
+                      <span className="ov-msg-sender">
+                        {msg.sender_name}
+                      </span>
+                    )}
+
+                    <div className="ov-msg-bubble">
+                      <span className="ov-msg-text">
+                        {msg.message_text}
+                      </span>
+
+                      <span className="ov-msg-time">
+                        {formatMessageTime(msg.created_at)}
+                      </span>
+                    </div>
                   </div>
                 </div>
               );
             })
           )}
-          <div ref={chatEndRef} />
         </div>
 
-        <form onSubmit={handleSendMessage} className="chat-action-footer">
+        <form
+          onSubmit={handleSendMessage}
+          className="ov-chat-input-form"
+        >
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type corporate announcement or community response..."
-            className="chat-text-input"
+            placeholder="Broadcast notice or respond to members…"
+            className="ov-chat-field"
             disabled={sending}
             required
           />
-          <button type="submit" disabled={sending || !newMessage.trim()} className="chat-send-btn">
-            {sending ? "..." : "⚡ Broadcast"}
+
+          <button
+            type="submit"
+            disabled={sending || !newMessage.trim()}
+            className="ov-chat-send-btn"
+          >
+            {sending ? (
+              "..."
+            ) : (
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M22 2 11 13" />
+                <path d="M22 2 15 22l-4-9-9-4 20-7z" />
+              </svg>
+            )}
           </button>
         </form>
       </div>
