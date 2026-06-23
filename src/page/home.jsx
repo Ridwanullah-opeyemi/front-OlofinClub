@@ -6,12 +6,15 @@ import Hero from "../component/Hero.jsx/Hero";
 import About from "../component/About/About";
 import "./home.css";
 import Navbar from "../component/nav/Navbar";
+import Carousel from "../component/Carousel/Carousel";
 
 function Home() {
   return (
     <div className="home-root">
       <Navbar />
       <Hero />
+      <About />
+      <Carousel />
 
       {/* ─── MEMBERSHIP ─── */}
       <section id="membership" className="info-section">
@@ -530,7 +533,6 @@ function Home() {
         </div>
       </section>
 
-      <About />
 
       {/* ─── FOOTER ─── */}
       <footer className="site-footer">

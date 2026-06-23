@@ -11,7 +11,7 @@ const NAV_ITEMS = [
       {
         heading: "What Olofin Does",
         items: [
-          { label: "Our Mission & Vision", anchor: "platform-rules", desc: "Why we exist and where we are headed" },
+          { label: "Our Mission & Vision", anchor: "platforms-rules", desc: "Why we exist and where we are headed" },
           { label: "Club Identity", anchor: "identity", desc: "Name, motto, slogan and registration details" },
           { label: "Aims & Objectives", anchor: "objectives", desc: "Six core goals that guide the club" },
           { label: "Core Values", anchor: "values", desc: "Honesty, auditing and family unity" },
