@@ -20,18 +20,16 @@ function Hero() {
 
           {/* Headline */}
           <h1 className="ohc-hero-h1">
-            Save Together.<br />
-            <span className="ohc-hero-h1-accent">Grow Together.</span>
+            Olofin Heritage<br />
+            <span className="ohc-hero-h1-accent">Club.</span>
           </h1>
 
           {/* Motto */}
-          <p className="ohc-hero-motto">ONE LOVE KEEP US TOGETHER</p>
+          <p className="ohc-hero-motto">THE PEOPLE OF LIKE MIND</p>
 
           {/* Description */}
           <p className="ohc-hero-desc">
-            Olofin Heritage Club is a trusted Nigerian savings community where
-            mature members pool resources, access soft loans, and support each
-            other — governed by a clear constitution since 2022.
+            Olofin Heritage Club is Humanitarian / Welface programed to hospital, orphanage home or the less privileged in our community. — governed by a clear constitution since 2022.
           </p>
 
           {/* Buttons */}

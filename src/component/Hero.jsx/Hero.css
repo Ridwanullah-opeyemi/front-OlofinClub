@@ -224,9 +224,10 @@
 
 @media (max-width: 768px) {
   .ohc-hero {
-    min-height: auto;
+    min-height: 100%;
     width: 100%;
   }
+  
 
   .ohc-hero-overlay {
     padding: 130px 24px 70px;
