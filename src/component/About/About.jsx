@@ -194,9 +194,8 @@ function About() {
         <span className="ohc-about-eyebrow">About Olofin Heritage Club</span>
         <h2 className="ohc-about-title">Built on Trust, Guided by a Constitution</h2>
         <p className="ohc-about-lead">
-          A registered Nigerian savings club where members pool resources, support each
-          other, and grow wealth together — governed by a clear constitution since 2022.
-          Tap any card to read the full details.
+
+          Olofin Heritage Club (OHC) is a non-profit, non-political, and indigenous organization established by sons and daughters of Kajola to promote unity, cultural preservation, community development, and the welfare of its members.
         </p>
       </div>
 

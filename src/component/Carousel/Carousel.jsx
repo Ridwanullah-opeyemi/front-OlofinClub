@@ -13,7 +13,13 @@ import img9 from "../../assets/carousel/09.jpg";
 import img10 from "../../assets/carousel/10.jpg";
 import img11 from "../../assets/carousel/11.jpg";
 import img12 from "../../assets/carousel/12.jpg";
-// import img13 from "../../assets/carousel/13.jpg";
+import img13 from "../../assets/carousel/13.jpg";
+import img14 from "../../assets/carousel/14.jpg";
+import img15 from "../../assets/carousel/15.jpg";
+import img16 from "../../assets/carousel/16.jpg";
+import img17 from "../../assets/carousel/17.jpg";
+import img18 from "../../assets/carousel/18.jpg";
+import img19 from "../../assets/carousel/19.jpg";
 
 const images = [
     img1,
@@ -28,7 +34,13 @@ const images = [
     img10,
     img11,
     img12,
-    //   img13,
+      img13,
+      img14,
+      img15,
+      img16,
+      img17,
+      img18,
+      img19,
 ];
 
 function Carousel() {
