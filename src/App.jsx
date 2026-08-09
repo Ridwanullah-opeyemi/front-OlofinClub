@@ -45,6 +45,7 @@ function App() {
 
         {/* 🌐 PUBLIC LANDING ROUTES */}
         <Route path="/" element={<Home />} />
+        
         <Route path="/login" element={<Login />} />
 
         {/* 📩 UPDATED: Dynamic route string matching the exact Link path from your Login interface */}

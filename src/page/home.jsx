@@ -7,6 +7,7 @@ import About from "../component/About/About";
 import "./home.css";
 import Navbar from "../component/nav/Navbar";
 import Carousel from "../component/Carousel/Carousel";
+import MembersSection from "./memberSection";
 
 function Home() {
   return (
@@ -15,6 +16,7 @@ function Home() {
       <Hero />
       <About />
       <Carousel />
+      <MembersSection />
 
       {/* ─── MEMBERSHIP ─── */}
       <section id="membership" className="info-section">
