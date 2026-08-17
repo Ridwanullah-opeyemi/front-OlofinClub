@@ -11,7 +11,7 @@ const ABOUT_CARDS = [
     content: {
       heading: "Our Mission & Vision",
       body: [
-        "Olofin Heritage Club (OHC) is a non-profit, non-political, and indigenous organization established by sons and daughters of Kajola to promote unity, cultural preservation, community development, and the welfare of its members.",
+        "Olofin Heritage Club is Humanitarian / Welface programed to hospital, orphanage home or the less privileged in our community. — governed by a clear constitution since 2022.",
         "Our mission is to foster meaningful relationships among members while contributing positively to the social, educational, economic, and infrastructural development of Kajola and its surrounding communities.",
         "Through collaboration, service, and community engagement, we strive to create opportunities that improve the quality of life for our people and preserve the rich heritage and values of our land for future generations.",
         "Olofin Heritage Club remains committed to promoting peace, mutual support, leadership, and collective progress, working together to build a stronger and more prosperous Kajola for all.",

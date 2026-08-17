@@ -29,7 +29,8 @@ function Hero() {
 
           {/* Description */}
           <p className="ohc-hero-desc">
-            Olofin Heritage Club is Humanitarian / Welface programed to hospital, orphanage home or the less privileged in our community. — governed by a clear constitution since 2022.
+            Olofin Heritage Club (OHC) is a non-profit, non-political, and indigenous organization established by sons and daughters of Kajola to promote unity, cultural preservation, community development, and the welfare of its members.
+            
           </p>
 
           {/* Buttons */}
