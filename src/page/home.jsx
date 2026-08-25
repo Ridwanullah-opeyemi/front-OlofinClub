@@ -69,16 +69,14 @@ function Home() {
             <span className="stat-value">₦5,000</span>
             <span className="stat-label">Monthly </span>
             <p>
-              Must be paid within each quarter. Carrying over to the following
-              quarter attracts a <strong>₦1,000 fine</strong>.
+              minimum monthly contributions for every member shall be ₦5000
             </p>
           </div>
           <div className="stat-card">
             <span className="stat-value">₦500</span>
             <span className="stat-label">Monthly Dues</span>
             <p>
-              Must also be paid within the quarter. Carry-over fine is{" "}
-              <strong>₦500</strong>.
+              monthly due for a every member shall be ₦500
             </p>
           </div>
           <div className="stat-card">
