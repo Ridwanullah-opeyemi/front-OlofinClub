@@ -67,7 +67,7 @@ function Home() {
         <div className="card-grid three-col">
           <div className="stat-card">
             <span className="stat-value">₦5,000</span>
-            <span className="stat-label">Minimum Monthly Contribution</span>
+            <span className="stat-label">Monthly </span>
             <p>
               Must be paid within each quarter. Carrying over to the following
               quarter attracts a <strong>₦1,000 fine</strong>.
