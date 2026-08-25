@@ -76,7 +76,7 @@ function Home() {
             <span className="stat-value">₦500</span>
             <span className="stat-label">Monthly Dues</span>
             <p>
-              monthly due for a every member shall be ₦500
+              monthly due for every member shall be ₦500
             </p>
           </div>
           <div className="stat-card">
