@@ -87,6 +87,10 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   animation: pulseRepayBadge 2s infinite ease-in-out;
 }
+a{
+  color: #ffffff;
+  text-decoration: none;
+}
 .repay-alert-badge.loan-badge-color { background-color: #2980b9; }
 @keyframes pulseRepayBadge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 

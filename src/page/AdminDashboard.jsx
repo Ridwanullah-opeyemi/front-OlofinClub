@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AdminOverview from "./admin/AdminOverview";
 import AdminTransactions from "./admin/AdminTransactions";
 import AdminApprovals from "./admin/AdminApprovals";
@@ -18,6 +18,7 @@ function AdminDashboard() {
   const [pendingRepayCount, setPendingRepayCount] = useState(0);
   const [pendingLoanCount, setPendingLoanCount] = useState(0);
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const homeUrl = "./home"
 
   // ── Toast popup (unchanged) ──────────────────────────────────────────
   const [popup, setPopup] = useState({ show: false, message: "", type: "" });
@@ -126,7 +127,7 @@ function AdminDashboard() {
       {/* Horizontal navigation header */}
       <header className="admin-horizontal-header">
         <div className="admin-brand-block">
-          <h2 className="admin-brand">Olofin Heritage</h2>
+          <h2 className="admin-brand"><Link to={homeUrl}>Olofin Heritage</Link></h2>
           <span className="admin-badge">Admin Workspace</span>
         </div>
 

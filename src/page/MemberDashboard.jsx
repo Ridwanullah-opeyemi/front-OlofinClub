@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MemberOverview from "./member/MemberOverview";
 import MemberLedger from "./member/MemberLedger";
 import MemberDeposit from "./member/MemberDeposit";
@@ -18,6 +18,7 @@ function MemberDashboard() {
 
   const token = localStorage.getItem("token");
   const cachedUser = JSON.parse(localStorage.getItem("user"));
+  const homeUrl = "./home"
 
   // ── Toast popup (mirrors the admin dashboard system) ──────────────
   const [popup, setPopup] = useState({ show: false, message: "", type: "" });
@@ -103,7 +104,7 @@ function MemberDashboard() {
       {/* Sidebar Navigation Panel */}
       <aside className="sidebar-panel">
         <div className="sidebar-header">
-          <h2 className="brand-title">Olofin Heritage Club</h2>
+          <h2 className="brand-title"><Link to={homeUrl}>Olofin Heritage Club</Link></h2>
           <small className="brand-subtitle">Member Workspace</small>
         </div>
 

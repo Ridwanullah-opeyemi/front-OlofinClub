@@ -418,6 +418,25 @@
   line-height: 1.8;
 }
 
+/* ─── Members Only Label ─── */
+.member-only-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 6px 10px;
+  border: 1px solid rgba(40, 199, 255, 0.25);
+  border-radius: 6px;
+  background: rgba(40, 199, 255, 0.08);
+  color: #28c7ff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+
+
 /* ─── Responsive ─── */
 @media (max-width: 900px) {
   .info-section,
